@@ -26,10 +26,10 @@
 |
 
 |JOEL
-|
-|
-|
-|
+| -
+| Teoria i probar les noves eines del gitlab
+| El nou entorn de desnvolupament, fer servir android studio i kotlin i tot aixo amb tant poc temps
+|3h
 |===
 
 
@@ -59,10 +59,10 @@
 |
 
 |JOEL
-|
-|
-|
-|
+| Teoria i probar coses de gitlab i organitzar una mica
+|Organitzar amb el grup, asignarse tasques començar amb la primera pantalla i investigar i aprofondir al enunciat
+| Les mateixes preocupacions, moltes coses noves i poc temps, no se per on començar
+| 3H
 |===
 
 |== RETROSPECTIVE MEETING
