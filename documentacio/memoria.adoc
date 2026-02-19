@@ -73,14 +73,14 @@
 |HORES TREBALLADES
 
 |JAVIER
-|
-|
-|
+|Vaig fer el daily stand up i crear els epics
+|He fet la pantalla de llistar vehicles
+|-
 |4H
 
 |HAMZA
-|-
-|
+|Vaig organitzar i revisar la gestió del codi al gitlab i la seva estructura
+|He començat a fer les pantalles de reserva
 |-
 |4H
 
@@ -96,6 +96,16 @@
 |
 |
 |===
+
+|== Captures board
+
+* Board inicial:
+// Substitueix "ruta_imatge_inicial.png" per la ruta real de la teva imatge
+image::Imatges/BoardInicial.png[]
+
+* Board final:
+// Substitueix "ruta_imatge_final.png" per la ruta real de la teva imatge
+image::Imatges/BoardFinal.png[]
 
 |== RETROSPECTIVE MEETING
 
