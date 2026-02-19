@@ -1,0 +1,82 @@
+= DAILY STAND UP
+[cols="1,2,3,3,1", options="header"]
+|===
+|13/02/2026
+|QUE ES VA FER AHIR
+|QUE ES FARA AVUI
+|PREOCUPACIONS QUE ES TENEN
+|HORES TREBALLADES
+
+|JAVIER
+|És el primer dia de projecte
+|Avui he faltat a classe
+|La preocupació més gran seria les poques setmanes que queden per entregar el projecte
+|3H
+
+|HAMZA
+|-
+|Avui organitzarem i revisaré la gestió del codi amb GitLab i la seva estructura
+|-
+|3H
+
+|BACHIR
+|
+|
+|
+|
+
+|JOEL
+|
+|
+|
+|
+|===
+
+
+|===
+|18/02/2026
+|QUE ES VA FER AHIR
+|QUE ES FARA AVUI
+|PREOCUPACIONS QUE ES TENEN
+|HORES TREBALLADES
+
+|JAVIER
+|El passat divendres vaig faltar a classe
+|Avui organitzarem tot, crearé el Daily Stand Up i també finalitzaré els epics dels requisits funcionals més els issues d’aquests
+|Encara no tinc cap preocupació ja que estem començat, potser l’única preocupació és que només hagin 3 Sprints
+|3H
+
+|HAMZA
+|-
+|Avui organitzarem i revisaré la gestió del codi amb GitLab i la seva estructura
+|-
+|3H
+
+|BACHIR
+|
+|
+|
+|
+
+|JOEL
+|
+|
+|
+|
+|===
+
+|== RETROSPECTIVE MEETING
+
+[cols="1,1,3,3,3", options="header"]
+|===
+|Sprint
+|Aspectes positius
+|Aspectes a millorar
+|Accions concretes
+
+|Sprint 1
+|Un dels aspectes positius és que som 4 en el grup i per tant hi ha menys treball individual
+|Comunicació i objectius clars
+|Comunicar en cada cas el que estem fent i sobretot el que volem que faci un altra company del grup; i també afegir
+|objectius clars i concrets (pantalles i requisits específics)
+|===
