@@ -94,10 +94,10 @@
 
 |JOEL
 |Vaig organitzar amb el grup, em vaig asignar tasques, començar amb la primera pantalla i investigar 
-|i aprofondir al enunciat
+ i aprofondir al enunciat
 |Em creare una branca i intentare veure que es el que no em funcionaba de la pantalla anterior (Intenar acabarla 
-|de manera correcta si es posible), a més, fare probes amb el chat gpt per veure com podriem fer el 
-|projecte correctament
+ de manera correcta si es posible), a més, fare probes amb el chat gpt per veure com podriem fer el 
+ projecte correctament
 |Que no entenc molt be alguns errors perque no controlo ni el entorn ni l'estructura ni el llenguatge
 |5h
 |===
