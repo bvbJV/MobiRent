@@ -19,7 +19,7 @@
 |HAMZA
 |-
 |Avui organitzarem i revisaré la gestió del codi amb GitLab i la seva estructura
-|-
+|Em preocupa el temps que tenim per fer tot el
 |3H
 
 |BACHIR
@@ -139,10 +139,11 @@ objectius clars i concrets (pantalles i requisits específics)
 |5H
 
 |HAMZA
-|
-|
-|
-|
+|Ahir vaig acabar la pantalla 
+|Avui continuaré revisant l’error d’arrencada i avançaré amb el que pugui de les pantalles
+|Em preocupa que el projecte no s’arrenqui correctament i això freni el progrés
+|5H
+
 
 |BACHIR
 |
