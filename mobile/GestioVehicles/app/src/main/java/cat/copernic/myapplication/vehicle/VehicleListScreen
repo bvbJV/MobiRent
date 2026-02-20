@@ -64,4 +64,3 @@ fun VehicleCard(vehicle: Vehicle) {
             Text(text = "Preu/hora: ${vehicle.preuHora} €")
         }
     }
-
