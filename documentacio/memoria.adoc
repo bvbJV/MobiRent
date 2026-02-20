@@ -2,6 +2,8 @@
 :toc:
 :sectnums:
 
+|SPRINT 1
+
 == 13/02/2026
 
 [cols="1,3,3,3,1", options="header"]
@@ -121,4 +123,36 @@ image:Imatges/BoardFinal1.png[Board final, width=400]
 Hem tingut problemes per entendre i començar el projecte
 |Comunicar en cada cas el que estem fent i sobretot el que volem que faci un altra company del grup; i també afegir +
 objectius clars i concrets (pantalles i requisits específics)
+|===
+
+|SPRINT 2:
+== 20/02/2026
+
+[cols="1,3,3,3,1", options="header"]
+|===
+|Nom |QUE ES VA FER AHIR |QUE ES FARA AVUI |PREOCUPACIONS QUE ES TENEN |HORES TREBALLADES
+
+|JAVIER
+|Ahir vam fer tota la documentació (Daily Stand Up ) i també vaig crear els epics amb els issues
+|Avui he reestructurat tots els fitxers correctament i he començat a crear la pantalla de Vehicle
+|Tinc preocupació de Kotlin ja que hi ha moltes coses i molts errors que tinc que no entenc
+|5H
+
+|HAMZA
+|
+|
+|
+|
+
+|BACHIR
+|
+|
+|
+|
+
+|JOEL
+|-
+|
+|
+|
 |===
