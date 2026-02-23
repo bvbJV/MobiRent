@@ -9,8 +9,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import cat.copernic.appvehicles.usuariAnonim.ui.view.HomeScreen
-// Importa tus otras pantallas aquí (ReservesScreen, PerfilScreen, etc.)
 import cat.copernic.appvehicles.reserva.ui.view.ReserveListScreen
+import cat.copernic.appvehicles.usuariAnonim.ui.view.RegisterScreen
+
 
 @Composable
 fun MainScreen() {
@@ -36,7 +37,13 @@ fun MainScreen() {
             }
 
             composable(AppRoutes.Perfil.route) {
-                // PerfilScreen() -> Crea esta función en client/ui/view
+                RegisterScreen(
+                    onNavigateBack = { navController.popBackStack() },
+                    onRegisterSuccess = {
+                        // Aquí decides qué hacer después de registrarse
+                        navController.navigate(AppRoutes.Inici.route)
+                    }
+                )
             }
         }
     }
