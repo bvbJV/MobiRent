@@ -11,20 +11,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import cat.copernic.appvehicles.core.navigation.MainScreen
 import cat.copernic.appvehicles.ui.theme.AppVehiclesTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContent {
             AppVehiclesTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+                // AQUÍ LLAMAS A LA CAJA PRINCIPAL QUE CONTIENE TODA LA NAVEGACIÓN
+                MainScreen()
             }
         }
     }

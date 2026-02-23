@@ -19,6 +19,7 @@ import cat.copernic.appvehicles.core.composables.VehicleCard
 import cat.copernic.appvehicles.core.composables.VehicleMock
 import cat.copernic.appvehicles.core.navigation.AppBottomNavigation
 import androidx.compose.ui.tooling.preview.Preview
+import cat.copernic.appvehicles.ui.theme.AppVehiclesTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -41,7 +42,7 @@ fun HomeScreen(onVehicleClick: (Int) -> Unit) {
             )
         },
         // RN28: Preparación para el Bottom Navigation
-        bottomBar = { AppBottomNavigation() }
+
     ) { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues)) {
 
@@ -79,8 +80,12 @@ fun HomeScreen(onVehicleClick: (Int) -> Unit) {
     }
 }
 
-@Preview(showSystemUi = true) // showSystemUi muestra el marco del móvil
+@Preview(showSystemUi = true)
 @Composable
 fun HomeScreenPreview() {
-    HomeScreen(onVehicleClick = {})
+    // Reemplaza 'AppVehiclesTheme' por el nombre real de tu tema
+    // (suele estar en ui/theme/Theme.kt)
+    AppVehiclesTheme {
+        HomeScreen(onVehicleClick = {})
+    }
 }
