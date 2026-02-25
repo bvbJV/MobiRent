@@ -160,3 +160,99 @@ objectius clars i concrets (pantalles i requisits específics)
 |
 |
 |===
+
+== 23/02/2026
+
+[cols="1,3,3,3,1", options="header"]
+|===
+|Nom |QUE ES VA FER AHIR |QUE ES FARA AVUI |PREOCUPACIONS QUE ES TENEN |HORES TREBALLADES
+
+|JAVIER
+|Ahir vaig fer tots els fitxers correctament i he començat a crear la pantalla de Vehicle
+|Avui he creat les 4 pantalles de vehicle, però al final de la classe l'Esther m'ha indicat que he d'unificar 3 pantalles en 1 sola (llistar, ordenar i filtrar)
+|La preocupació més gran es el temps i una mica d'incertesa en la construcció del backend
+|5H
+
+|HAMZA
+|
+|
+|
+|
+
+
+|BACHIR
+|
+|
+|
+|
+
+|JOEL
+|-
+|
+|
+|
+|===
+
+== 24/02/2026
+
+[cols="1,3,3,3,1", options="header"]
+|===
+|Nom |QUE ES VA FER AHIR |QUE ES FARA AVUI |PREOCUPACIONS QUE ES TENEN |HORES TREBALLADES
+
+|JAVIER
+|Ahir vaig crear totes les pantalles de Vehicle però al final l'Esther em va indicar que l'habia d'unificar 3 en 1.
+|Avui he unificat les pantalles de llistar, odernar per preu i filtrar per dates en una sola pantalla (VehicleLlistarScreen)
+|Preocupació les de sempre, temps, codi pels RF
+|1 H
+
+|HAMZA
+|
+|
+|
+|
+
+
+|BACHIR
+|
+|
+|
+|
+
+|JOEL
+|-
+|
+|
+|
+|===
+
+== 25/02/2026
+
+[cols="1,3,3,3,1", options="header"]
+|===
+|Nom |QUE ES VA FER AHIR |QUE ES FARA AVUI |PREOCUPACIONS QUE ES TENEN |HORES TREBALLADES
+
+|JAVIER
+|Ahir vaig unificar totes les pantalles de Vehicle
+|
+|Preocupació per part de la creació dels RF
+|2H
+
+|HAMZA
+|Ahir vaig acabar la pantalla 
+|Avui continuaré revisant l’error d’arrencada i avançaré amb el que pugui de les pantalles
+|Em preocupa que el projecte no s’arrenqui correctament i això freni el progrés
+|5H
+
+
+|BACHIR
+|
+|
+|
+|
+
+|JOEL
+|-
+|
+|
+|
+|===
