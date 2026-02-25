@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package Controller;
+package cat.copernic.backendProjecte3.controller;
 
 import cat.copernic.backendProjecte3.business.ReservaService;
 import cat.copernic.backendProjecte3.entities.Reserva;

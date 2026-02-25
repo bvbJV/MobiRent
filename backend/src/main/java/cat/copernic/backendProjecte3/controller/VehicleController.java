@@ -2,12 +2,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package Controller;
+package cat.copernic.backendProjecte3.controller;
 
-import DTO.VehicleResponseDTO;
+import cat.copernic.backendProjecte3.dto.VehicleResponseDTO;
 import cat.copernic.backendProjecte3.business.VehicleService;
-import DTO.VehicleMapper;
-import DTO.VehicleResponseDTO;
+import cat.copernic.backendProjecte3.dto.VehicleMapper;
+import cat.copernic.backendProjecte3.dto.VehicleResponseDTO;
 import cat.copernic.backendProjecte3.entities.Vehicle;
 import cat.copernic.backendProjecte3.exceptions.DadesNoTrobadesException;
 
