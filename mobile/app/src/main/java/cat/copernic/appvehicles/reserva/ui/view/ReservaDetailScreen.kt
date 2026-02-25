@@ -31,7 +31,7 @@ fun ReservationDetailScreen(
                     IconButton(onClick = onNavigateBack) {
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "Volver atrás"
+                            contentDescription = "Volver"
                         )
                     }
                 },
@@ -50,7 +50,7 @@ fun ReservationDetailScreen(
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Fotografía del vehículo (Placeholder visual)
+            // Foto placeholder
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -69,7 +69,7 @@ fun ReservationDetailScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Tarjeta con los detalles de la reserva
+            // Tarjeta de detalles
             ElevatedCard(
                 modifier = Modifier.fillMaxWidth(),
                 colors = CardDefaults.elevatedCardColors(
@@ -85,6 +85,7 @@ fun ReservationDetailScreen(
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.primary
                     )
+
                     Divider(modifier = Modifier.padding(vertical = 8.dp))
 
                     DetailRow(label = "Vehículo", value = "Toyota Corolla Híbrido")
@@ -111,7 +112,7 @@ fun ReservationDetailScreen(
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            // Botón de anular reserva (RF55)
+            // Botón para anular
             Button(
                 onClick = onCancelReservation,
                 colors = ButtonDefaults.buttonColors(

@@ -20,10 +20,9 @@ fun CreateReservationScreen(
     onNavigateBack: () -> Unit = {},
     onConfirmReservation: () -> Unit = {}
 ) {
-    // Variables para la UI
-    var expanded by remember { mutableStateOf(false) }
-    val vehicles = listOf("Toyota Corolla Híbrido", "Seat Leon", "Ford Focus", "Tesla Model 3")
-    var selectedVehicle by remember { mutableStateOf(vehicles[0]) }
+    val availableVehicles = listOf("Toyota Corolla Híbrido", "Seat Leon", "Ford Focus", "Tesla Model 3")
+    var selectedVehicle by remember { mutableStateOf(availableVehicles[0]) }
+    var isDropdownExpanded by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -57,6 +56,7 @@ fun CreateReservationScreen(
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.align(Alignment.Start)
             )
+
             Spacer(modifier = Modifier.height(8.dp))
 
             Row(
@@ -88,11 +88,12 @@ fun CreateReservationScreen(
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.align(Alignment.Start)
             )
+
             Spacer(modifier = Modifier.height(8.dp))
 
             ExposedDropdownMenuBox(
-                expanded = expanded,
-                onExpandedChange = { expanded = !expanded },
+                expanded = isDropdownExpanded,
+                onExpandedChange = { isDropdownExpanded = !isDropdownExpanded },
                 modifier = Modifier.fillMaxWidth()
             ) {
                 OutlinedTextField(
@@ -100,22 +101,22 @@ fun CreateReservationScreen(
                     onValueChange = {},
                     readOnly = true,
                     label = { Text("Selecciona un coche") },
-                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = isDropdownExpanded) },
                     colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
                     modifier = Modifier
                         .menuAnchor()
                         .fillMaxWidth()
                 )
                 ExposedDropdownMenu(
-                    expanded = expanded,
-                    onDismissRequest = { expanded = false }
+                    expanded = isDropdownExpanded,
+                    onDismissRequest = { isDropdownExpanded = false }
                 ) {
-                    vehicles.forEach { selectionOption ->
+                    availableVehicles.forEach { vehicle ->
                         DropdownMenuItem(
-                            text = { Text(selectionOption) },
+                            text = { Text(vehicle) },
                             onClick = {
-                                selectedVehicle = selectionOption
-                                expanded = false
+                                selectedVehicle = vehicle
+                                isDropdownExpanded = false
                             }
                         )
                     }
@@ -139,6 +140,7 @@ fun CreateReservationScreen(
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.primary
                     )
+
                     Divider(modifier = Modifier.padding(vertical = 8.dp))
 
                     CostRow(label = "Días de alquiler (5 días)", value = "250.00 €")
