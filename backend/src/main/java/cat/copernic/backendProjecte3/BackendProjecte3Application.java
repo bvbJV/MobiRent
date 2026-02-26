@@ -70,6 +70,7 @@ public class BackendProjecte3Application implements CommandLineRunner{
         c.setEmail("maria@test.com");
         c.setPassword(PasswordHasher.encode("123456"));
         c.setDni("44556677D");
+        c.setNomComplet("Client Test");
         c.setReputacio(Reputacio.PREMIUM);
         c.setRol(UserRole.CLIENT);
         return clientRepo.save(c);
