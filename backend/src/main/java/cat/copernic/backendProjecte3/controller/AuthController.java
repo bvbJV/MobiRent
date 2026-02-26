@@ -18,6 +18,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth") // Esta es la dirección base de la "puerta"
+@CrossOrigin
 public class AuthController {
 
     @Autowired
