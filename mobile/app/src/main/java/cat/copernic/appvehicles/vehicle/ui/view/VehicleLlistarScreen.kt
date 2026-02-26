@@ -179,7 +179,39 @@ fun VehicleLlistarScreen(
 
 @Composable
 fun VehicleCard(vehicle: VehicleMock, onClick: () -> Unit) {
-    TODO("Not yet implemented")
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        onClick = onClick
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+
+            Text(
+                text = "${vehicle.marca} ${vehicle.model}",
+                style = MaterialTheme.typography.titleMedium
+            )
+
+            Spacer(modifier = Modifier.height(4.dp))
+
+            Text(
+                text = vehicle.variant,
+                style = MaterialTheme.typography.bodyMedium
+            )
+
+            Spacer(modifier = Modifier.height(4.dp))
+
+            Text(
+                text = "${vehicle.preuHora} €/h",
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.primary
+            )
+        }
+    }
 }
 
 @Preview(showBackground = true, showSystemUi = true)
