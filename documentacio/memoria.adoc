@@ -155,8 +155,107 @@ objectius clars i concrets (pantalles i requisits específics)
 |
 
 |JOEL
-|-
+|Vaig crear una branca i vaig veure que es el que no em funcionaba de la pantalla anterior (Intenar acabarla 
+ de manera correcta si es posible), a més, vaig fer probes amb el chat gpt per veure com podriem fer el 
+ projecte correctament
+|Revisio del Sprint amb el Manel, parlar de dubtes i organitzar els issues i el tauler i crear tasques.
+|Temps i que tot surti bé
+|4h
+|===
+
+== 23/02/2026
+
+[cols="1,3,3,3,1", options="header"]
+|===
+|Nom |QUE ES VA FER AHIR |QUE ES FARA AVUI |PREOCUPACIONS QUE ES TENEN |HORES TREBALLADES
+
+|JAVIER
+|Ahir vaig fer tots els fitxers correctament i he començat a crear la pantalla de Vehicle
+|Avui he creat les 4 pantalles de vehicle, però al final de la classe l'Esther m'ha indicat que he d'unificar 3 pantalles en 1 sola (llistar, ordenar i filtrar)
+|La preocupació més gran es el temps i una mica d'incertesa en la construcció del backend
+|5H
+
+|HAMZA
+|Ahir vaig començar la pantalla de llistar reserves 
+|Avui acabaré la pantalla de detall de reserva.
+|Preocupació per l’organització correcta dels RF i com connectar les pantalles amb la lògica.
+|4H
+
+
+|BACHIR
 |
 |
 |
+|
+
+|JOEL
+|Revisio del Sprint amb el Manel, parlar de dubtes i organitzar els issues i el tauler i crear tasques. 
+|Creare la pantalla de login i la de recuperar contrasenya, també si em dona temps començare la de edit profile i preguntare dubtes
+|La manera de fer les pantalles funcionals i que no surgeixin problemes a l'hora d'utilitzar el android studio i sincroniztar cambis
+|3H
+|===
+
+== 24/02/2026
+
+[cols="1,3,3,3,1", options="header"]
+|===
+|Nom |QUE ES VA FER AHIR |QUE ES FARA AVUI |PREOCUPACIONS QUE ES TENEN |HORES TREBALLADES
+
+|JAVIER
+|Ahir vaig crear totes les pantalles de Vehicle però al final l'Esther em va indicar que l'habia d'unificar 3 en 1.
+|Avui he unificat les pantalles de llistar, odernar per preu i filtrar per dates en una sola pantalla (VehicleLlistarScreen)
+|Preocupació les de sempre, temps, codi pels RF
+|1 H
+
+== 24/02/2026
+
+|HAMZA
+|Ahir vaig crear la pantalla de detall de reserva i vaig començar la pantalla de crear reserva.
+|Avui acabaré la pantalla de crear reserva i revisaré la navegació entre les tres pantalles.
+|Preocupació pel temps i per implementar correctament la part de ViewModel i backend.
+|3H
+
+
+|BACHIR
+|
+|
+|
+|
+
+|JOEL
+|
+|
+|
+|===
+
+== 25/02/2026
+
+[cols="1,3,3,3,1", options="header"]
+|===
+|Nom |QUE ES VA FER AHIR |QUE ES FARA AVUI |PREOCUPACIONS QUE ES TENEN |HORES TREBALLADES
+
+|JAVIER
+|Ahir vaig unificar totes les pantalles de Vehicle
+|
+|Preocupació per part de la creació dels RF
+|2H
+
+|HAMZA
+|Ahir vaig acabar la pantalla de crear reserva i vaig revisar les tres pantalles .
+|Avui començaré a implementar la lògica del RF de reserves .
+|Preocupació per la implementació correcta dels RF i la connexió amb el backend.
+|5H
+
+
+|BACHIR
+|
+|
+|
+|
+
+|JOEL
+|Ahir vaig crear la pantalla de login i la de recuperar contrasenya, també vaig començar la de edit profile i vaig preguntar dubtes
+|Avui acabare la pantalla de edit profile i començare el Rf de edit profile
+|La manera de fer les pantalles funcionals i que no surgeixin problemes a l'hora d'utilitzar el android studio i sincroniztar cambis
+|3H
 |===
