@@ -1,10 +1,5 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package cat.copernic.backendProjecte3.dto;
 
-import cat.copernic.backendProjecte3.dto.VehicleResponseDTO;
 import cat.copernic.backendProjecte3.entities.Vehicle;
 
 public class VehicleMapper {
@@ -13,11 +8,17 @@ public class VehicleMapper {
 
         return new VehicleResponseDTO(
                 vehicle.getMatricula(),
-                vehicle.getTipusVehicle().name(),
-                vehicle.getMotor(),
+                vehicle.getMarca(),
+                vehicle.getModel(),
+                vehicle.getVariant(),
+                vehicle.getFotoUrl(),
                 vehicle.getPotencia(),
                 vehicle.getColor(),
-                vehicle.getPreuHora()
+                vehicle.getLimitQuilometratge(),
+                vehicle.getPreuHora(),
+                vehicle.getFiancaEstandard(),
+                vehicle.getMinDiesLloguer(),
+                vehicle.getMaxDiesLloguer()
         );
     }
 }
