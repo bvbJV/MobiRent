@@ -176,10 +176,10 @@ objectius clars i concrets (pantalles i requisits específics)
 |5H
 
 |HAMZA
-|
-|
-|
-|
+|Ahir vaig començar la pantalla de llistar reserves 
+|Avui acabaré la pantalla de detall de reserva.
+|Preocupació per l’organització correcta dels RF i com connectar les pantalles amb la lògica.
+|4H
 
 
 |BACHIR
@@ -207,11 +207,13 @@ objectius clars i concrets (pantalles i requisits específics)
 |Preocupació les de sempre, temps, codi pels RF
 |1 H
 
+== 24/02/2026
+
 |HAMZA
-|
-|
-|
-|
+|Ahir vaig crear la pantalla de detall de reserva i vaig començar la pantalla de crear reserva.
+|Avui acabaré la pantalla de crear reserva i revisaré la navegació entre les tres pantalles.
+|Preocupació pel temps i per implementar correctament la part de ViewModel i backend.
+|3H
 
 
 |BACHIR
@@ -239,9 +241,9 @@ objectius clars i concrets (pantalles i requisits específics)
 |2H
 
 |HAMZA
-|Ahir vaig acabar la pantalla 
-|Avui continuaré revisant l’error d’arrencada i avançaré amb el que pugui de les pantalles
-|Em preocupa que el projecte no s’arrenqui correctament i això freni el progrés
+|Ahir vaig acabar la pantalla de crear reserva i vaig revisar les tres pantalles .
+|Avui començaré a implementar la lògica del RF de reserves .
+|Preocupació per la implementació correcta dels RF i la connexió amb el backend.
 |5H
 
 
