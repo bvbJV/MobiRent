@@ -1,10 +1,13 @@
 = DAILY STAND UP
 :toc:
+:toclevels: 2
 :sectnums:
 
-|SPRINT 1
+== SPRINT 1
 
-== 13/02/2026
+=== Daily standup
+
+==== 13/02/2026
 
 [cols="1,3,3,3,1", options="header"]
 |===
@@ -36,7 +39,7 @@
 |===
 
 
-== 18/02/2026
+==== 18/02/2026
 
 [cols="1,3,3,3,1", options="header"]
 |===
@@ -68,7 +71,7 @@
 |===
 
 
-== 19/02/2026
+==== 19/02/2026
 
 [cols="1,3,3,3,1", options="header"]
 |===
@@ -93,28 +96,28 @@
 |4H
 
 |JOEL
-|Vaig organitzar amb el grup, em vaig asignar tasques, començar amb la primera pantalla i investigar 
- i aprofondir al enunciat
-|Em creare una branca i intentare veure que es el que no em funcionaba de la pantalla anterior (Intenar acabarla 
- de manera correcta si es posible), a més, fare probes amb el chat gpt per veure com podriem fer el 
- projecte correctament
+|Vaig organitzar amb el grup, em vaig asignar tasques, començar amb la primera pantalla i investigar
+i aprofondir al enunciat
+|Em creare una branca i intentare veure que es el que no em funcionaba de la pantalla anterior (Intenar acabarla
+de manera correcta si es posible), a més, fare probes amb el chat gpt per veure com podriem fer el
+projecte correctament
 |Que no entenc molt be alguns errors perque no controlo ni el entorn ni l'estructura ni el llenguatge
 |5h
 |===
 
 
-== Captures board
+=== Captures board
 
-=== Board inicial
+==== Board inicial
 
 image:Imatges/BoardInicial1.png[Board inicial, width=400]
 
-=== Board final
+==== Board final
 
 image:Imatges/BoardFinal1.png[Board final, width=400]
 
 
-== RETROSPECTIVE MEETING
+=== RETROSPECTIVE MEETING
 
 [cols="1,3,3,3", options="header"]
 |===
@@ -128,9 +131,13 @@ Hem tingut problemes per entendre i començar el projecte
 objectius clars i concrets (pantalles i requisits específics)
 |===
 
-|SPRINT 2:
+---
 
-== 20/02/2026
+== SPRINT 2
+
+=== Daily standup
+
+==== 20/02/2026
 
 [cols="1,3,3,3,1", options="header"]
 |===
@@ -143,7 +150,7 @@ objectius clars i concrets (pantalles i requisits específics)
 |5H
 
 |HAMZA
-|Ahir vaig acabar la pantalla 
+|Ahir vaig acabar la pantalla
 |Avui continuaré revisant l’error d’arrencada i avançaré amb el que pugui de les pantalles
 |Em preocupa que el projecte no s’arrenqui correctament i això freni el progrés
 |5H
@@ -156,15 +163,15 @@ objectius clars i concrets (pantalles i requisits específics)
 |3H
 
 |JOEL
-|Vaig crear una branca i vaig veure que es el que no em funcionaba de la pantalla anterior (Intenar acabarla 
- de manera correcta si es posible), a més, vaig fer probes amb el chat gpt per veure com podriem fer el 
- projecte correctament
+|Vaig crear una branca i vaig veure que es el que no em funcionaba de la pantalla anterior (Intenar acabarla
+de manera correcta si es posible), a més, vaig fer probes amb el chat gpt per veure com podriem fer el
+projecte correctament
 |Revisio del Sprint amb el Manel, parlar de dubtes i organitzar els issues i el tauler i crear tasques.
 |Temps i que tot surti bé
 |4h
 |===
 
-== 23/02/2026
+==== 23/02/2026
 
 [cols="1,3,3,3,1", options="header"]
 |===
@@ -177,7 +184,7 @@ objectius clars i concrets (pantalles i requisits específics)
 |5H
 
 |HAMZA
-|Ahir vaig començar la pantalla de llistar reserves 
+|Ahir vaig començar la pantalla de llistar reserves
 |Avui acabaré la pantalla de detall i de crear de reserva.
 |Preocupació per l’organització correcta dels RF i com connectar les pantalles amb la lògica.
 |4H
@@ -190,14 +197,14 @@ objectius clars i concrets (pantalles i requisits específics)
 |6H
 
 |JOEL
-|Revisio del Sprint amb el Manel, parlar de dubtes i organitzar els issues i el tauler i crear tasques. 
+|Revisio del Sprint amb el Manel, parlar de dubtes i organitzar els issues i el tauler i crear tasques.
 |Creare la pantalla de login i la de recuperar contrasenya, també si em dona temps començare la de edit profile i preguntare dubtes
 |La manera de fer les pantalles funcionals i que no surgeixin problemes a l'hora d'utilitzar el android studio i sincroniztar cambis
 |3H
 |===
 
 
-== 25/02/2026
+==== 25/02/2026
 
 [cols="1,3,3,3,1", options="header"]
 |===
@@ -229,7 +236,7 @@ objectius clars i concrets (pantalles i requisits específics)
 |3H
 |===
 
-== 26/02/2026
+==== 26/02/2026
 
 [cols="1,3,3,3,1", options="header"]
 |===
@@ -261,12 +268,27 @@ objectius clars i concrets (pantalles i requisits específics)
 |4H
 |===
 
-== Captures board
+=== Captures board
 
-=== Board inicial
+==== Board inicial
 
-image:Imatges/.png[Board inicial, width=400]
+image:Imatges/BoardInicialSprint2.png[Board inicial, width=400]
 
-=== Board final
+==== Board final
 
-image:Imatges/BoardFinal1.png[Board final, width=400]
+image:Imatges/BoardFinalSprint2Part1.png[Board final, width=400]
+
+image:Imatges/BoardFinalSprint2Part2.png[Board final, width=400]
+
+
+=== RETROSPECTIVE MEETING
+
+[cols="1,3,3,3", options="header"]
+|===
+|Sprint |Aspectes positius |Aspectes a millorar |Accions concretes
+
+|Sprint 2
+|Tots estem posant de la nostra part, no hi ha ningú que estigui endarrerit i la comunicació es bona
+|Potser hem de ser mes eficients a l'hora d'acabar tasques, el temps s'acaba i ens hauria agradat poder haber avançat més
+|Intentar preguntar mes dubtes per tenir més clara l'informació a l'hora de començar una tasca
+|===
