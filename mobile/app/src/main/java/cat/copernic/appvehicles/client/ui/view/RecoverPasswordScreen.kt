@@ -38,7 +38,7 @@ fun RecoverPasswordScreen(
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
                         Icon(
-                            imageVector = Icons.Default.ArrowBack,
+                            imageVector = Icons.Default.ArrowBack, //deprecated
                             contentDescription = "Volver"
                         )
                     }
