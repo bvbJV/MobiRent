@@ -16,6 +16,8 @@ import org.springframework.stereotype.Service;
 import cat.copernic.backendProjecte3.dto.ClientRegistreDTO;
 import cat.copernic.backendProjecte3.enums.UserRole;
 
+import org.springframework.web.multipart.MultipartFile;
+
 /**
  *
  * @author manel
@@ -75,43 +77,73 @@ public class ClientService {
      * @return El cliente guardado
      * @throws ErrorAltaException Si el email o DNI ya existen
      */
-    @Transactional
-    public Client registrarNouClient(ClientRegistreDTO dto) throws ErrorAltaException {
+   @Transactional
+    public Client registrarNouClient(ClientRegistreDTO dto, MultipartFile fotoDni, MultipartFile fotoCarnet) throws ErrorAltaException {
         
         // 1. Validar Email (PK)
         if (clientRepo.existsById(dto.getEmail())) {
             throw new ErrorAltaException("Ja existeix un usuari amb aquest email: " + dto.getEmail());
         }
         
-        // 2. Validar DNI (Regla de negocio)
+        // 2. Validar DNI
         if (clientRepo.existsByDni(dto.getDni())) {
             throw new ErrorAltaException("Ja existeix un client amb aquest DNI: " + dto.getDni());
         }
+
+        // 3. Guardar las fotos en el disco duro del servidor y obtener la ruta final
+        String rutaDni = guardarArxiu(fotoDni);
+        String rutaCarnet = guardarArxiu(fotoCarnet);
         
-        // 3. Mapeo Manual DTO -> Entidad Client
+        // 4. Mapeo Manual DTO -> Entidad Client
         Client nouClient = new Client();
         
-        // --- Datos de Usuari (Padre) ---
         nouClient.setEmail(dto.getEmail());
         nouClient.setNomComplet(dto.getNomComplet());
-        nouClient.setPassword(PasswordHasher.encode(dto.getPassword())); // Encriptamos aquí
-        nouClient.setRol(UserRole.CLIENT); // Asignamos rol CLIENT obligatoriamente
+        nouClient.setPassword(PasswordHasher.encode(dto.getPassword())); 
+        nouClient.setRol(UserRole.CLIENT); 
         
-        // --- Datos de Client (Hijo) ---
         nouClient.setDni(dto.getDni());
         nouClient.setDataCaducitatDni(dto.getDataCaducitatDni());
-        nouClient.setImatgeDni(dto.getImatgeDni());
+        
+        // Asignamos la ruta REAL de la foto (si subió foto) o el string por defecto que venía
+        nouClient.setImatgeDni(rutaDni != null ? rutaDni : dto.getImatgeDni());
+        
         nouClient.setNacionalitat(dto.getNacionalitat());
         nouClient.setAdreca(dto.getAdreca());
         
         nouClient.setTipusCarnetConduir(dto.getTipusCarnetConduir());
         nouClient.setDataCaducitatCarnet(dto.getDataCaducitatCarnet());
-        nouClient.setImatgeCarnet(dto.getImatgeCarnet());
+        
+        // Asignamos la ruta REAL de la foto de la licencia
+        nouClient.setImatgeCarnet(rutaCarnet != null ? rutaCarnet : dto.getImatgeCarnet());
         
         nouClient.setNumeroTargetaCredit(dto.getNumeroTargetaCredit());
         
-        // Guardamos
         return clientRepo.save(nouClient);
+    }
+    
+    // Función auxiliar para guardar el archivo físico
+    // Función auxiliar para guardar el archivo físico
+    private String guardarArxiu(MultipartFile arxiu) {
+        if (arxiu == null || arxiu.isEmpty()) return null;
+
+        try {
+            String uploadDir = "uploads/";
+            java.io.File dir = new java.io.File(uploadDir);
+            if (!dir.exists()) dir.mkdirs();
+
+            String fileName = System.currentTimeMillis() + "_" + arxiu.getOriginalFilename();
+            
+            // AQUÍ ESTÁ EL CAMBIO: Usamos el nombre completo de la librería (java.nio.file)
+            java.nio.file.Path path = java.nio.file.Paths.get(uploadDir + fileName);
+            java.nio.file.Files.write(path, arxiu.getBytes());
+
+            return path.toString(); 
+            
+        } catch (java.io.IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
     
 }

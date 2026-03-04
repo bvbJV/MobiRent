@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import tools.jackson.databind.ObjectMapper;
 /**
  *
  * @author HAMZA
@@ -24,6 +25,9 @@ public class ReservaController {
 
     @Autowired
     private ReservaService reservaService;
+    
+    @Autowired
+    private ObjectMapper objectMapper;
 
     // Listar reservas por cliente y ordenar asc/desc por fecha de inicio
     @GetMapping
