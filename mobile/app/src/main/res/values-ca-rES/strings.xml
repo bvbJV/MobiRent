@@ -31,4 +31,7 @@
     <string name="rental_days">Dies de lloguer </string>
     <string name="total_to_pay">Total a pagar</string>
     <string name="confirm_reservation">Confirmar reserva</string>
+    <string name="confirm_cancel_question">Esteu segur que voleu cancel·lar aquesta reserva?</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel·la</string>
 </resources>

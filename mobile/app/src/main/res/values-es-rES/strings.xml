@@ -29,4 +29,7 @@
     <string name="rental_days">Días de alquiler</string>
     <string name="total_to_pay">Total a pagar</string>
     <string name="confirm_reservation">Confirmar reserva</string>
+    <string name="confirm_cancel_question">¿Estás seguro de que deseas cancelar esta reserva?</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancelar</string>
 </resources>
