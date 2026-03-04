@@ -1,7 +1,5 @@
 package cat.copernic.appvehicles.client.data.model
 
-import java.time.LocalDate
-
 data class ClientProfileDto(
     val dni: String,
     val nomComplet: String,
