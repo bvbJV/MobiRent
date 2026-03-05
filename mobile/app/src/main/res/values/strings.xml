@@ -43,7 +43,26 @@
     <string name="back">Back</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
-    <string name="logout">Logout</string>
+    <string name="available_vehicles">Available vehicles</string>
+    <string name="filter_by_date_range">Filter by date range</string>
+    <string name="start_date_dd_mm_yyyy">Start date (dd/mm/yyyy)</string>
+    <string name="end_date_dd_mm_yyyy">End date (dd/mm/yyyy)</string>
+    <string name="apply_filter">Apply filter</string>
+    <string name="sort_by_price">Sort by price</string>
+    <string name="ascending">Ascending</string>
+    <string name="descending">Descending</string>
+    <string name="hour">%1$s €/hour</string>
+    <string name="electric">Electric</string>
+    <string name="hybrid">Hybrid</string>
+    <string name="diesel">Diesel</string>
+    <string name="vehicle_details">Vehicle details</string>
+    <string name="power">Power: %1$s</string>
+    <string name="color">Color: %1$s</string>
+    <string name="mileage_limit">Mileage limit: %1$s</string>
+    <string name="minimum_rental_days">Minimum rental days: %1$s</string>
+    <string name="maximum_rental_days">Maximum rental days: %1$s</string>
+    <string name="standard_deposit">Standard deposit: %1$s</string>
+    <string name="book_vehicle">Book vehicle</string>
 
     <!-- Login -->
     <string name="login_title">Login</string>
@@ -64,6 +83,7 @@
     <string name="recover_success">If the email exists, you will receive a link in a few minutes.</string>
 
     <!-- Edit profile -->
+    <string name="logout">Logout</string>
     <string name="edit_profile_title">Edit profile</string>
     <string name="profile_photo">Profile photo</string>
     <string name="pick_profile_photo">Choose profile photo</string>
