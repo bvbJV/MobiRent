@@ -1,4 +1,4 @@
-package cat.copernic.appvehicles.vehicle.ui.view
+package cat.copernic.appvehicles.model
 
 /**
  * Model temporal (Mock)

@@ -9,7 +9,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import cat.copernic.appvehicles.R
+import cat.copernic.appvehicles.model.VehicleMock
 import cat.copernic.appvehicles.ui.theme.AppVehiclesTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -31,9 +34,9 @@ fun VehicleLlistarScreen(
     // Datos simulados
     // -----------------------------
     val vehiculos = listOf(
-        VehicleMock(1, "Tesla", "Model 3", "Elèctric", 25.0),
-        VehicleMock(2, "Toyota", "Corolla", "Híbrid", 18.5),
-        VehicleMock(3, "BMW", "X1", "Dièsel", 30.0)
+        VehicleMock(1, "Tesla", "Model 3", stringResource(R.string.electric), 25.0),
+        VehicleMock(2, "Toyota", "Corolla", stringResource(R.string.hybrid), 18.5),
+        VehicleMock(3, "BMW", "X1", stringResource(R.string.diesel), 30.0)
     )
 
     // -----------------------------
@@ -49,7 +52,7 @@ fun VehicleLlistarScreen(
     // Lógica filtrado fechas (mock)
     // -----------------------------
     val vehiculosFinal = if (aplicarFiltro && fechaInicio.isNotBlank() && fechaFin.isNotBlank()) {
-        // Simulación simple (backend real lo hará de verdad)
+        // Simple simulation (real backend will handle this)
         vehiculosOrdenados.take(2)
     } else {
         vehiculosOrdenados
@@ -58,10 +61,10 @@ fun VehicleLlistarScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Vehicles disponibles") },
+                title = { Text(stringResource(R.string.available_vehicles)) },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Tornar")
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Go back")
                     }
                 }
             )
@@ -76,7 +79,7 @@ fun VehicleLlistarScreen(
         ) {
 
             // -----------------------------
-            // FILTRO FECHAS
+            // DATE FILTER
             // -----------------------------
             item {
 
@@ -87,7 +90,7 @@ fun VehicleLlistarScreen(
                     Column(modifier = Modifier.padding(16.dp)) {
 
                         Text(
-                            text = "Filtrar per rang de dates",
+                            text = stringResource(R.string.filter_by_date_range),
                             style = MaterialTheme.typography.titleMedium
                         )
 
@@ -96,7 +99,7 @@ fun VehicleLlistarScreen(
                         OutlinedTextField(
                             value = fechaInicio,
                             onValueChange = { fechaInicio = it },
-                            label = { Text("Data inici (dd/mm/yyyy)") },
+                            label = { Text(stringResource(R.string.start_date_dd_mm_yyyy)) },
                             modifier = Modifier.fillMaxWidth()
                         )
 
@@ -105,7 +108,7 @@ fun VehicleLlistarScreen(
                         OutlinedTextField(
                             value = fechaFin,
                             onValueChange = { fechaFin = it },
-                            label = { Text("Data fi (dd/mm/yyyy)") },
+                            label = { Text(stringResource(R.string.end_date_dd_mm_yyyy)) },
                             modifier = Modifier.fillMaxWidth()
                         )
 
@@ -115,7 +118,7 @@ fun VehicleLlistarScreen(
                             onClick = { aplicarFiltro = true },
                             modifier = Modifier.fillMaxWidth()
                         ) {
-                            Text("Aplicar filtre")
+                            Text(stringResource(R.string.apply_filter))
                         }
                     }
                 }
@@ -124,7 +127,7 @@ fun VehicleLlistarScreen(
             }
 
             // -----------------------------
-            // ORDEN POR PRECIO
+            // SORT BY PRICE
             // -----------------------------
             item {
 
@@ -136,7 +139,7 @@ fun VehicleLlistarScreen(
                     Column(modifier = Modifier.padding(16.dp)) {
 
                         Text(
-                            text = "Ordenar per preu",
+                            text = stringResource(R.string.sort_by_price),
                             style = MaterialTheme.typography.titleMedium
                         )
 
@@ -147,13 +150,13 @@ fun VehicleLlistarScreen(
                             FilterChip(
                                 selected = ordenAscendente,
                                 onClick = { ordenAscendente = true },
-                                label = { Text("Ascendent") }
+                                label = { Text(stringResource(R.string.ascending)) }
                             )
 
                             FilterChip(
                                 selected = !ordenAscendente,
                                 onClick = { ordenAscendente = false },
-                                label = { Text("Descendent") }
+                                label = { Text(stringResource(R.string.descending)) }
                             )
                         }
                     }
@@ -163,7 +166,7 @@ fun VehicleLlistarScreen(
             }
 
             // -----------------------------
-            // LISTADO VEHICULOS
+            // VEHICLE LIST
             // -----------------------------
             items(vehiculosFinal) { vehiculo ->
 
@@ -207,7 +210,7 @@ fun VehicleCard(vehicle: VehicleMock, onClick: () -> Unit) {
             Spacer(modifier = Modifier.height(4.dp))
 
             Text(
-                text = "${vehicle.preuHora} €/h",
+                text = stringResource(R.string.hour, vehicle.preuHora),
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.primary
             )
