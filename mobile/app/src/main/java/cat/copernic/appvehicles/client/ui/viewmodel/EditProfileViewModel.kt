@@ -166,8 +166,8 @@ class EditProfileViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun logout() {
-        viewModelScope.launch {
-            sessionStore.clear()
-        }
+        //viewModelScope.launch {
+        //    sessionStore.clear()
+        //}
     }
 }

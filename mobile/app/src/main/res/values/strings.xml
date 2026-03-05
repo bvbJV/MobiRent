@@ -83,6 +83,7 @@
     <string name="recover_success">If the email exists, you will receive a link in a few minutes.</string>
 
     <!-- Edit profile -->
+    <string name="logout">Logout</string>
     <string name="edit_profile_title">Edit profile</string>
     <string name="profile_photo">Profile photo</string>
     <string name="pick_profile_photo">Choose profile photo</string>

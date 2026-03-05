@@ -21,6 +21,7 @@ import cat.copernic.appvehicles.usuariAnonim.data.repository.AuthRepository
 import cat.copernic.appvehicles.usuariAnonim.ui.view.HomeScreen
 import cat.copernic.appvehicles.vehicle.ui.view.VehicleDetailScreen
 import cat.copernic.appvehicles.model.VehicleMock
+import cat.copernic.appvehicles.vehicle.ui.view.VehicleLlistarScreen
 
 @Composable
 fun MainScreen(
@@ -99,7 +100,7 @@ fun MainScreen(
             // -----------------------------
             composable(AppRoutes.Vehicles.route) {
                 VehicleLlistarScreen(
-                    onVehicleClick = { vehicleId ->
+                    onVehicleClick = { vehicleId: Int ->
                         navController.navigate("${AppRoutes.VehicleDetail.route}/$vehicleId")
                     }
                 )
