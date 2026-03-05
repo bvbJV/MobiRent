@@ -342,9 +342,9 @@ image:Imatges/BoardFinalSprint2Part2.png[Board final, width=400]
 |5H/0H
 
 |HAMZA
-|
-|
-|
+|Ahir vaig dedicar el temps a revisar i arreglar alguns errors que havien quedat del Sprint 2, sobretot problemes que afectaven algunes pantalles d’Android. També vaig començar a mirar la funcionalitat d’anul·lar reserva per veure com implementar-la.
+|Avui continuaré treballant en la implementació de la funcionalitat d’anul·lar reserva i revisant la lògica que ha de seguir segons l’estat de la reserva.
+|Em preocupa una mica el temps que tindrem durant aquest sprint per acabar totes les funcionalitats de reserves.
 |5H
 
 
@@ -374,9 +374,9 @@ image:Imatges/BoardFinalSprint2Part2.png[Board final, width=400]
 |5H/0H
 
 |HAMZA
-|
-|
-|
+|Ahir vaig continuar treballant amb la funcionalitat d’anul·lar reserva i vaig avançar bastant en la seva implementació dins de l’app Android.
+|Avui continuaré amb aquesta funcionalitat per deixar-la completament implementada i comprovar que funciona correctament amb el backend.
+|Em preocupa que puguin aparèixer problemes d’integració amb el backend o errors que obliguin a tornar a revisar part del codi.
 |5H
 
 
@@ -406,9 +406,9 @@ image:Imatges/BoardFinalSprint2Part2.png[Board final, width=400]
 |5H/0H
 
 |HAMZA
-|
-|
-|
+|Ahir vaig continuar treballant en la funcionalitat d’anul·lar reserva i fent proves per assegurar que funcionava correctament.
+|Avui he començat a implementar la funcionalitat d’alta de reserva dins de l’app Android, preparant les pantalles i la lògica necessària.
+|Em preocupa una mica que la connexió amb el backend pugui donar problemes quan comencem a integrar totes les funcionalitats.
 |5H
 
 
@@ -438,9 +438,9 @@ image:Imatges/BoardFinalSprint2Part2.png[Board final, width=400]
 |5H/0H
 
 |HAMZA
-|
-|
-|
+|Ahir vaig continuar treballant en la funcionalitat d’alta de reserva i finalment he pogut acabar la seva implementació dins de l’app Android.
+|Avui revisaré que totes les funcionalitats de reserves funcionin correctament i miraré de solucionar alguns petits errors que han aparegut després dels merges entre branques.
+|Em preocupa una mica els conflictes que poden aparèixer amb els merges entre branques i que això pugui provocar errors al projecte.
 |5H
 
 
