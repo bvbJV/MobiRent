@@ -14,6 +14,8 @@ import jakarta.transaction.Transactional;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import cat.copernic.backendProjecte3.dto.ClientRegistreDTO;
+import cat.copernic.backendProjecte3.enums.UserRole;
 
 
 /**
@@ -64,24 +66,51 @@ public class ClientService {
 
         return clientRepo.save(client);
     }
-    /**
-     * @param dadesClient
-     * @param passwordEnClar
-     * @return
-     * @throws ErrorAltaException
+
+    /***
+     * Registra un nuevo cliente validando duplicados y mapeando desde DTO.
+     * * @param dto Datos del registro provenientes del cliente (móvil/web)
+     * @param dto
+     * @return El cliente guardado
+     * @throws ErrorAltaException Si el email o DNI ya existen
      */
     @Transactional
-    public Client registrarNouClient(Client dadesClient, String passwordEnClar) throws ErrorAltaException {
-        if (clientRepo.existsById(dadesClient.getUsername())) {
-            throw new ErrorAltaException("Ja existeix un usuari amb aquest email");
+    public Client registrarNouClient(ClientRegistreDTO dto) throws ErrorAltaException {
+        
+        // 1. Validar Email (PK)
+        if (clientRepo.existsById(dto.getEmail())) {
+            throw new ErrorAltaException("Ja existeix un usuari amb aquest email: " + dto.getEmail());
         }
-
-        // Encriptem password
-        dadesClient.setPassword(PasswordHasher.encode(passwordEnClar));
-
-        // Assignem estat actiu directament (sense validació posterior)
-        // dadesClient.setActiu(true); // Si tinguessis un camp boolean
-        return clientRepo.save(dadesClient);
+        
+        // 2. Validar DNI (Regla de negocio)
+        if (clientRepo.existsByDni(dto.getDni())) {
+            throw new ErrorAltaException("Ja existeix un client amb aquest DNI: " + dto.getDni());
+        }
+        
+        // 3. Mapeo Manual DTO -> Entidad Client
+        Client nouClient = new Client();
+        
+        // --- Datos de Usuari (Padre) ---
+        nouClient.setEmail(dto.getEmail());
+        nouClient.setNomComplet(dto.getNomComplet());
+        nouClient.setPassword(PasswordHasher.encode(dto.getPassword())); // Encriptamos aquí
+        nouClient.setRol(UserRole.CLIENT); // Asignamos rol CLIENT obligatoriamente
+        
+        // --- Datos de Client (Hijo) ---
+        nouClient.setDni(dto.getDni());
+        nouClient.setDataCaducitatDni(dto.getDataCaducitatDni());
+        nouClient.setImatgeDni(dto.getImatgeDni());
+        nouClient.setNacionalitat(dto.getNacionalitat());
+        nouClient.setAdreca(dto.getAdreca());
+        
+        nouClient.setTipusCarnetConduir(dto.getTipusCarnetConduir());
+        nouClient.setDataCaducitatCarnet(dto.getDataCaducitatCarnet());
+        nouClient.setImatgeCarnet(dto.getImatgeCarnet());
+        
+        nouClient.setNumeroTargetaCredit(dto.getNumeroTargetaCredit());
+        
+        // Guardamos
+        return clientRepo.save(nouClient);
     }
     
     public ClientService(ClientRepository clientRepository) {

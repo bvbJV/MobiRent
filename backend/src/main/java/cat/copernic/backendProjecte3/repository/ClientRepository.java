@@ -17,8 +17,9 @@ import org.springframework.stereotype.Repository;
 public interface ClientRepository extends JpaRepository<Client, String> {
 
 //    
-    Optional<Client> findByDni(String dni);
+//    Optional<Client> findByDni(String dni);
     boolean existsByDni(String dni);
+//
 //    
 //    List<Client> findByReputacio(Reputacio reputacio);
 //

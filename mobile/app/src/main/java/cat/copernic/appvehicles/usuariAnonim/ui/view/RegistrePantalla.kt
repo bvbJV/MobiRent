@@ -1,5 +1,6 @@
 package cat.copernic.appvehicles.usuariAnonim.ui.view
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -17,8 +18,10 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.tooling.preview.Preview
+import cat.copernic.appvehicles.usuariAnonim.ui.viewmodel.RegisterViewModel
 
-
+// Hemos añadido los campos de estado al final para que el ViewModel funcione.
+// No afectan al diseño visual.
 data class RegisterUiState(
     val nomComplet: String = "",
     val numeroIdentificacio: String = "",
@@ -29,7 +32,11 @@ data class RegisterUiState(
     val adreca: String = "",
     val nacionalitat: String = "",
     val email: String = "",
-    val password: String = ""
+    val password: String = "",
+    // --- Campos lógicos (Invisibles en UI si no quieres usarlos, pero necesarios para lógica) ---
+    val isLoading: Boolean = false,
+    val errorMessage: String? = null,
+    val isSuccess: Boolean = false
 )
 
 // ---------------------------------------------------------------------------
@@ -89,22 +96,37 @@ fun ImageUploadButton(label: String, onClick: () -> Unit) {
 // PANTALLA PRINCIPAL
 // ---------------------------------------------------------------------------
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Composable
 fun RegisterScreen(
+    viewModel: RegisterViewModel, // CAMBIO 1: Recibimos el ViewModel
     onNavigateBack: () -> Unit,
     onRegisterSuccess: () -> Unit
 ) {
-    // Simulació de l'estat que vindria del ViewModel
-    var uiState by remember { mutableStateOf(RegisterUiState()) }
+    // CAMBIO 2: Usamos el estado del ViewModel en lugar del local
+    val uiState by viewModel.uiState.collectAsState()
+
     val scrollState = rememberScrollState()
+
+    // Controlamos en qué paso estamos (1, 2 o 3)
+    var currentStep by remember { mutableIntStateOf(1) }
+    val totalSteps = 3
+
+    // CAMBIO 3: Observar éxito para navegar
+    LaunchedEffect(uiState.isSuccess) {
+        if (uiState.isSuccess) {
+            onRegisterSuccess()
+        }
+    }
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Nou Registre") },
+                title = { Text("Registre - Pas $currentStep de $totalSteps") },
                 navigationIcon = {
-                    IconButton(onClick = onNavigateBack) {
+                    IconButton(onClick = {
+                        if (currentStep > 1) currentStep-- else onNavigateBack()
+                    }) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Tornar enrere")
                     }
                 },
@@ -113,8 +135,45 @@ fun RegisterScreen(
                     titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
                 )
             )
+        },
+        // Mover los botones a la parte inferior de la pantalla fija
+        bottomBar = {
+            BottomAppBar(
+                containerColor = MaterialTheme.colorScheme.surface,
+                tonalElevation = 8.dp
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    if (currentStep > 1) {
+                        OutlinedButton(onClick = { currentStep-- }, enabled = !uiState.isLoading) {
+                            Text("Enrere")
+                        }
+                    } else {
+                        Spacer(modifier = Modifier.width(8.dp)) // Espaciador para equilibrar si no hay botón
+                    }
+
+                    if (currentStep < totalSteps) {
+                        Button(onClick = { currentStep++ }, enabled = !uiState.isLoading) {
+                            Text("Següent")
+                        }
+                    } else {
+                        // CAMBIO 4: Acción Finalizar conectada al ViewModel
+                        Button(
+                            onClick = { viewModel.register() },
+                            enabled = !uiState.isLoading
+                        ) {
+                            Text("Finalitzar")
+                        }
+                    }
+                }
+            }
         }
     ) { paddingValues ->
+        // El contenido principal sigue teniendo scroll por si el teclado se abre
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -125,114 +184,12 @@ fun RegisterScreen(
         ) {
             Spacer(modifier = Modifier.height(8.dp))
 
-            Text(
-                text = "Dades Personals",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary
-            )
-
-            ReusableTextField(
-                value = uiState.nomComplet,
-                onValueChange = { uiState = uiState.copy(nomComplet = it) },
-                label = "Nom complet"
-            )
-
-            ReusableTextField(
-                value = uiState.numeroIdentificacio,
-                onValueChange = { uiState = uiState.copy(numeroIdentificacio = it) },
-                label = "Número d'identificació (DNI/Passaport)"
-            )
-
-            // Fals DatePicker (per no complicar la UI innecessàriament sense llibreries extra)
-            OutlinedTextField(
-                value = uiState.dataCaducitatId,
-                onValueChange = { },
-                label = { Text("Data caducitat identificació") },
-                modifier = Modifier.fillMaxWidth(),
-                readOnly = true,
-                trailingIcon = { Icon(Icons.Default.DateRange, contentDescription = "Seleccionar data") }
-            )
-
-            ImageUploadButton(label = "Pujar foto identificació") { /* TODO: Obre galeria */ }
-
-            Divider(modifier = Modifier.padding(vertical = 8.dp))
-
-            Text(
-                text = "Dades de Conducció i Pagament",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary
-            )
-
-            ReusableTextField(
-                value = uiState.tipusLlicencia,
-                onValueChange = { uiState = uiState.copy(tipusLlicencia = it) },
-                label = "Tipus de llicència de conduir"
-            )
-
-            OutlinedTextField(
-                value = uiState.dataCaducitatLlicencia,
-                onValueChange = { },
-                label = { Text("Data caducitat llicència") },
-                modifier = Modifier.fillMaxWidth(),
-                readOnly = true,
-                trailingIcon = { Icon(Icons.Default.DateRange, contentDescription = "Seleccionar data") }
-            )
-
-            ImageUploadButton(label = "Pujar foto llicència") { /* TODO: Obre galeria */ }
-
-            ReusableTextField(
-                value = uiState.numeroTargetaCredit,
-                onValueChange = { uiState = uiState.copy(numeroTargetaCredit = it) },
-                label = "Número de targeta de crèdit"
-            )
-
-            Divider(modifier = Modifier.padding(vertical = 8.dp))
-
-            Text(
-                text = "Dades de Contacte i Accés",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary
-            )
-
-            ReusableTextField(
-                value = uiState.adreca,
-                onValueChange = { uiState = uiState.copy(adreca = it) },
-                label = "Adreça del domicili"
-            )
-
-            ReusableTextField(
-                value = uiState.nacionalitat,
-                onValueChange = { uiState = uiState.copy(nacionalitat = it) },
-                label = "Nacionalitat"
-            )
-
-            ReusableTextField(
-                value = uiState.email,
-                onValueChange = { uiState = uiState.copy(email = it) },
-                label = "Correu electrònic (Usuari)"
-            )
-
-            ReusableTextField(
-                value = uiState.password,
-                onValueChange = { uiState = uiState.copy(password = it) },
-                label = "Contrasenya",
-                isPassword = true
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Botó principal d'acció
-            Button(
-                onClick = onRegisterSuccess,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(50.dp),
-                shape = MaterialTheme.shapes.medium
-            ) {
-                Text("Registrar-se", fontSize = MaterialTheme.typography.titleMedium.fontSize)
+            // Usamos un simple 'when' para mostrar un bloque de campos u otro
+            // CAMBIO 5: Pasamos la función updateState del ViewModel
+            when (currentStep) {
+                1 -> Pas1DadesPersonals(uiState) { viewModel.updateState(it) }
+                2 -> Pas3DadesContacte(uiState) { viewModel.updateState(it) }
+                3 -> Pas2DadesConduccio(uiState) { viewModel.updateState(it) }
             }
 
             Spacer(modifier = Modifier.height(32.dp))
@@ -240,17 +197,40 @@ fun RegisterScreen(
     }
 }
 
-@Preview(
-    showBackground = true,
-    showSystemUi = true,
-    name = "Register Screen Preview"
-)
+// --- BLOQUES DE CONTENIDO DIVIDIDOS ---
+
 @Composable
-fun RegisterScreenPreview() {
-    MaterialTheme {
-        RegisterScreen(
-            onNavigateBack = {},
-            onRegisterSuccess = {}
-        )
-    }
+fun Pas1DadesPersonals(state: RegisterUiState, onStateChange: (RegisterUiState) -> Unit) {
+    Text("Dades Personals", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
+    ReusableTextField(value = state.nomComplet, onValueChange = { onStateChange(state.copy(nomComplet = it)) }, label = "Nom complet")
+    ReusableTextField(value = state.numeroIdentificacio, onValueChange = { onStateChange(state.copy(numeroIdentificacio = it)) }, label = "Número d'identificació")
+    OutlinedTextField(
+        value = state.dataCaducitatId, onValueChange = { onStateChange(state.copy(dataCaducitatId = it)) }, label = { Text("Data caducitat") },
+        modifier = Modifier.fillMaxWidth(),  trailingIcon = { Icon(Icons.Default.DateRange, "Seleccionar data") }
+    )
+    ImageUploadButton(label = "Pujar foto identificació") { /* TODO */ }
 }
+
+@Composable
+fun Pas2DadesConduccio(state: RegisterUiState, onStateChange: (RegisterUiState) -> Unit) {
+    Text("Dades de Conducció i Pagament", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
+    ReusableTextField(value = state.tipusLlicencia, onValueChange = { onStateChange(state.copy(tipusLlicencia = it)) }, label = "Tipus de llicència")
+    OutlinedTextField(
+        value = state.dataCaducitatLlicencia, onValueChange = { onStateChange(state.copy(dataCaducitatLlicencia = it)) }, label = { Text("Data caducitat llicència") },
+        modifier = Modifier.fillMaxWidth(), trailingIcon = { Icon(Icons.Default.DateRange, "Seleccionar data") }
+    )
+    ImageUploadButton(label = "Pujar foto llicència") { /* TODO */ }
+    ReusableTextField(value = state.numeroTargetaCredit, onValueChange = { onStateChange(state.copy(numeroTargetaCredit = it)) }, label = "Targeta de crèdit")
+}
+
+@Composable
+fun Pas3DadesContacte(state: RegisterUiState, onStateChange: (RegisterUiState) -> Unit) {
+    Text("Dades de Contacte i Accés", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
+    ReusableTextField(value = state.adreca, onValueChange = { onStateChange(state.copy(adreca = it)) }, label = "Adreça")
+    ReusableTextField(value = state.nacionalitat, onValueChange = { onStateChange(state.copy(nacionalitat = it)) }, label = "Nacionalitat")
+    ReusableTextField(value = state.email, onValueChange = { onStateChange(state.copy(email = it)) }, label = "Email (Usuari)")
+    ReusableTextField(value = state.password, onValueChange = { onStateChange(state.copy(password = it)) }, label = "Contrasenya", isPassword = true)
+}
+
+// Nota: He eliminado el Preview temporalmente porque requiere inyectar un ViewModel Mock,
+// pero tu código principal ya compilará.
