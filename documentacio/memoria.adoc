@@ -350,9 +350,9 @@ image:Imatges/BoardFinalSprint2Part2.png[Board final, width=400]
 
 |BACHIR
 | -
-|
-|
-|3H
+| Avui he començat a fer la extracció strings / traducció als 3 idiomes de la pantalla registre
+| A l'hora de trduir strings de missatges d'errors era més complicat
+|3H/0H
 
 |JOEL
 |
@@ -381,10 +381,10 @@ image:Imatges/BoardFinalSprint2Part2.png[Board final, width=400]
 
 
 |BACHIR
-| -
-|
-|
-|3H
+| Ahir vaog fer la traducció de la pantalla de registre
+| Avui intentaré fer totes les validacions de registre
+| Dubtes amb algunes validacions com llicencia o DNI
+|6H/0H
 
 |JOEL
 |
@@ -413,10 +413,10 @@ image:Imatges/BoardFinalSprint2Part2.png[Board final, width=400]
 
 
 |BACHIR
+| El dilluns vaig acabar pràcticament amb totes les validacions de registre
+| Avui he pogut resoldre els dubtes que tenia sobre les validacions i acabarles
 | -
-|
-|
-|3H
+|3H/1H
 
 |JOEL
 |
@@ -445,10 +445,10 @@ image:Imatges/BoardFinalSprint2Part2.png[Board final, width=400]
 
 
 |BACHIR
-| -
-|
-|
-|3H
+| Ahir vaig acabar de fer les validacions per registre
+| Avui faré que es puguin pujar, veure i eliminar fotos a l'hora de fer el regsitre i milloraré visualment les pantalles
+| A l'hora de pujar una foto en registre, no se com es fa per a que aquesta foto pugui ser accedida desde editar perfil
+|4H/2H
 
 |JOEL
 |
@@ -456,6 +456,19 @@ image:Imatges/BoardFinalSprint2Part2.png[Board final, width=400]
 |
 |4h
 |===
+
+=== Captures board
+
+==== Board inicial
+
+image:Imatges/BoardInicialSprint2.png[Board inicial, width=400]
+
+==== Board final
+
+image:Imatges/BoardFinalSprint2Part1.png[Board final, width=400]
+
+image:Imatges/BoardFinalSprint2Part2.png[Board final, width=400]
+
 
 === RETROSPECTIVE MEETING
 
