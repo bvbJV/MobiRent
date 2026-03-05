@@ -4,6 +4,7 @@
  */
 package cat.copernic.backendProjecte3.business;
 
+import cat.copernic.appvehicles.dto.ClientUpdateDTO;
 import cat.copernic.backendProjecte3.config.PasswordHasher;
 import cat.copernic.backendProjecte3.entities.Client;
 import cat.copernic.backendProjecte3.exceptions.ErrorAltaException;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import cat.copernic.backendProjecte3.dto.ClientRegistreDTO;
 import cat.copernic.backendProjecte3.enums.UserRole;
 
+
 /**
  *
  * @author manel
@@ -23,31 +25,30 @@ import cat.copernic.backendProjecte3.enums.UserRole;
 @Service
 public class ClientService {
     
+    private final ClientRepository clientRepository;
+    
     @Autowired
     private ClientRepository clientRepo;
 
-    /***
-     * 
-     * @return 
+    /**
+     * @return
      */
     public List<Client> obtenirTots() {
         return clientRepo.findAll();
     }
 
-    /***
-     * 
+    /**
      * @param email
-     * @return 
+     * @return
      */
     public Client obtenirPerId(String email) {
         return clientRepo.findById(email)
                 .orElseThrow(() -> new RuntimeException("Client no trobat amb email: " + email));
     }
 
-    /***
-     * 
+    /**
      * @param email
-     * @throws ErrorDeleteException 
+     * @throws ErrorDeleteException
      */
     @Transactional
     public void eliminarClient(String email) throws ErrorDeleteException {
@@ -56,15 +57,13 @@ public class ClientService {
         }
         clientRepo.deleteById(email);
     }
-
-    /***
-     * 
+    /**
      * @param client
-     * @return 
+     * @return
      */
     @Transactional
     public Client guardarClient(Client client) {
-        
+
         return clientRepo.save(client);
     }
 
@@ -114,4 +113,27 @@ public class ClientService {
         return clientRepo.save(nouClient);
     }
     
+    public ClientService(ClientRepository clientRepository) {
+        this.clientRepository = clientRepository;
+    }
+
+    public Client obtenirPerDni(String dni) {
+        return clientRepository.findByDni(dni)
+                .orElseThrow(() -> new RuntimeException("Client no trobat"));
+    }
+
+    public Client actualitzarPerfilPerDni(String dni, ClientUpdateDTO dto) {
+        Client client = obtenirPerDni(dni);
+
+        client.setNomComplet(dto.getNomComplet());
+        client.setTelefon(dto.getTelefon());
+        client.setAdreca(dto.getAdreca());
+        client.setNacionalitat(dto.getNacionalitat());
+        client.setNumeroTargetaCredit(dto.getNumeroTargetaCredit());
+        client.setDataCaducitatDni(dto.getDataCaducitatDni());
+        client.setTipusCarnetConduir(dto.getTipusCarnetConduir());
+        client.setDataCaducitatCarnet(dto.getDataCaducitatCarnet());
+
+        return clientRepository.save(client);
+    }
 }
