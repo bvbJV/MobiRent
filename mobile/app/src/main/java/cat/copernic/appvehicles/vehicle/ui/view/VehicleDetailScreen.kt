@@ -12,12 +12,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.ui.res.stringResource
+import cat.copernic.appvehicles.R
 import cat.copernic.appvehicles.ui.theme.AppVehiclesTheme
-import cat.copernic.appvehicles.vehicle.ui.view.VehicleMock
+import cat.copernic.appvehicles.model.VehicleMock
 
 /**
- * RF91 - Detall vehicle
- * Pantalla plantilla amb dades simulades (Mock)
+ * RF91 - Vehicle details
+ * Template screen with simulated data (Mock)
  */
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -27,22 +29,22 @@ fun VehicleDetailScreen(
     onBackClick: () -> Unit = {}
 ) {
 
-    val potencia = "283 CV"
-    val color = "Blanc"
-    val limitKm = "300 km/dia"
-    val minDies = "1 dia"
-    val maxDies = "15 dies"
+    val potencia = "283 HP"
+    val color = "White"
+    val limitKm = "300 km/day"
+    val minDies = "1 day"
+    val maxDies = "15 days"
     val fianca = "500€"
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Detall vehicle") },
+                title = { Text(stringResource(R.string.vehicle_details)) },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "Tornar enrere"
+                            contentDescription = "Go back"
                         )
                     }
                 }
@@ -66,7 +68,7 @@ fun VehicleDetailScreen(
                 shape = MaterialTheme.shapes.medium
             ) {
                 Box(contentAlignment = Alignment.Center) {
-                    Text("Imatge vehicle")
+                    Text("Vehicle image")
                 }
             }
 
@@ -87,7 +89,7 @@ fun VehicleDetailScreen(
             Spacer(modifier = Modifier.height(12.dp))
 
             Text(
-                text = "${vehicle.preuHora}€/hora",
+                text = "${vehicle.preuHora}€/hour",
                 style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.primary,
                 fontWeight = FontWeight.Bold
@@ -101,12 +103,12 @@ fun VehicleDetailScreen(
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
 
-                    Text("Potència: $potencia")
-                    Text("Color: $color")
-                    Text("Límit quilometratge: $limitKm")
-                    Text("Mínim dies lloguer: $minDies")
-                    Text("Màxim dies lloguer: $maxDies")
-                    Text("Fiança estàndard: $fianca")
+                    Text(stringResource(R.string.power, potencia))
+                    Text(stringResource(R.string.color, color))
+                    Text(stringResource(R.string.mileage_limit, limitKm))
+                    Text(stringResource(R.string.minimum_rental_days, minDies))
+                    Text(stringResource(R.string.maximum_rental_days, maxDies))
+                    Text(stringResource(R.string.standard_deposit, fianca))
                 }
             }
 
@@ -116,11 +118,12 @@ fun VehicleDetailScreen(
                 onClick = { },
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Reservar vehicle")
+                Text(stringResource(R.string.book_vehicle))
             }
         }
     }
 }
+
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun VehicleDetailScreenPreview() {
@@ -129,7 +132,7 @@ fun VehicleDetailScreenPreview() {
         id = 1,
         marca = "Tesla",
         model = "Model 3",
-        variant = "Elèctric",
+        variant = "Electric",
         preuHora = 25.0
     )
 

@@ -37,5 +37,25 @@
     <string name="confirm_cancel_question">Are you sure you want to cancel this reservation?</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
+    <string name="available_vehicles">Available vehicles</string>
+    <string name="filter_by_date_range">Filter by date range</string>
+    <string name="start_date_dd_mm_yyyy">Start date (dd/mm/yyyy)</string>
+    <string name="end_date_dd_mm_yyyy">End date (dd/mm/yyyy)</string>
+    <string name="apply_filter">Apply filter</string>
+    <string name="sort_by_price">Sort by price</string>
+    <string name="ascending">Ascending</string>
+    <string name="descending">Descending</string>
+    <string name="hour">%1$s €/hour</string>
+    <string name="electric">Electric</string>
+    <string name="hybrid">Hybrid</string>
+    <string name="diesel">Diesel</string>
+    <string name="vehicle_details">Vehicle details</string>
+    <string name="power">Power: %1$s</string>
+    <string name="color">Color: %1$s</string>
+    <string name="mileage_limit">Mileage limit: %1$s</string>
+    <string name="minimum_rental_days">Minimum rental days: %1$s</string>
+    <string name="maximum_rental_days">Maximum rental days: %1$s</string>
+    <string name="standard_deposit">Standard deposit: %1$s</string>
+    <string name="book_vehicle">Book vehicle</string>
 
 </resources>

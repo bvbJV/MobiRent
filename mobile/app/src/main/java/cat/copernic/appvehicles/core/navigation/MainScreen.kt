@@ -24,7 +24,7 @@ import cat.copernic.appvehicles.usuariAnonim.ui.viewmodel.RegisterViewModelFacto
 
 import cat.copernic.appvehicles.vehicle.ui.view.VehicleLlistarScreen
 import cat.copernic.appvehicles.vehicle.ui.view.VehicleDetailScreen
-import cat.copernic.appvehicles.vehicle.ui.view.VehicleMock
+import cat.copernic.appvehicles.model.VehicleMock
 
 @Composable
 fun MainScreen(
