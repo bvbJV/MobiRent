@@ -324,3 +324,147 @@ image:Imatges/BoardFinalSprint2Part2.png[Board final, width=400]
 |Potser hem de ser mes eficients a l'hora d'acabar tasques, el temps s'acaba i ens hauria agradat poder haber avançat més
 |Intentar preguntar mes dubtes per tenir més clara l'informació a l'hora de començar una tasca
 |===
+
+== SPRINT 3
+
+=== Daily standup
+
+==== 27/02/2026
+
+[cols="1,3,3,3,1", options="header"]
+|===
+|Nom |QUE ES VA FER AHIR |QUE ES FARA AVUI |PREOCUPACIONS QUE ES TENEN |HORES TREBALLADES
+
+|JAVIER
+|Ahir vaig fer tot el backend de JAVA
+|Avui he continuat amb el backend per deixar-ho llest i he començat a veure que hi ha problemes amb les meves funcionalitats al Android a les meves pantalles
+|El que més em preocupa és quants RF arribaré a finalitzar en aquest srpint, espero que al menys 2
+|5H/0H
+
+|HAMZA
+|
+|
+|
+|5H
+
+
+|BACHIR
+| -
+|
+|
+|3H
+
+|JOEL
+|
+|
+|
+|4h
+|===
+
+==== 02/03/2026
+
+[cols="1,3,3,3,1", options="header"]
+|===
+|Nom |QUE ES VA FER AHIR |QUE ES FARA AVUI |PREOCUPACIONS QUE ES TENEN |HORES TREBALLADES
+
+|JAVIER
+|Ahir vaig acabar tot el relacionat amb backend (per ara) i vaig començar a veure per què em donava tants problemes les funcionalitats de les pantalles
+|Avui he estat tota la estona intentant arreglar els problemes que em dona Android però no se el que li passa, crec que és més senzill del que crec
+|Estic una mica saturat i vaig una mica lent amb els meus companys a nivell de RF finalitzats o qüasi per finalitzar
+|5H/0H
+
+|HAMZA
+|
+|
+|
+|5H
+
+
+|BACHIR
+| -
+|
+|
+|3H
+
+|JOEL
+|
+|
+|
+|4h
+|===
+
+==== 04/03/2026
+
+[cols="1,3,3,3,1", options="header"]
+|===
+|Nom |QUE ES VA FER AHIR |QUE ES FARA AVUI |PREOCUPACIONS QUE ES TENEN |HORES TREBALLADES
+
+|JAVIER
+|El dilluns vaig intentar arreglar els problemes d'Android sense cap èxit
+|Avui he consigut arreglar el problema que habia al Android amb èxit tot i que estat tot el dia d'avui. Al final era una classe amb el mateix nom que altra (VehicleRepository) que estava amagada i donava error per això. També he pogut fer el RF de ordenar per preu al final de la classe
+|Temps per acabar RF tot i que crec avui m'e pogut carregar un al menys
+|5H/0H
+
+|HAMZA
+|
+|
+|
+|5H
+
+
+|BACHIR
+| -
+|
+|
+|3H
+
+|JOEL
+|
+|
+|
+|4h
+|===
+
+==== 05/03/2026
+
+[cols="1,3,3,3,1", options="header"]
+|===
+|Nom |QUE ES VA FER AHIR |QUE ES FARA AVUI |PREOCUPACIONS QUE ES TENEN |HORES TREBALLADES
+
+|JAVIER
+|Ahir vaig arreglar el problema de Android i vaig finalitzar el RF d'ordenacio per preu de Vehicles
+|Avui he conseguit fer 3 RF més ja que un cop arreglada el problema a Android la funcionalitat ja estava aplicada. Funcionan bé Veure el detall d'un vehicle (RF 91) i també Llistar Vehicles (RF90) i consultar disponibilitat de vehicles per rang de dates esta però no acaba de funcionar del tot bé (RF56)
+|Menys preocupació ja que he pogut finalitzar 3 amb èxit i l'alrte l'acabaré aviat
+|5H/0H
+
+|HAMZA
+|
+|
+|
+|5H
+
+
+|BACHIR
+| -
+|
+|
+|3H
+
+|JOEL
+|
+|
+|
+|4h
+|===
+
+=== RETROSPECTIVE MEETING
+
+[cols="1,3,3,3", options="header"]
+|===
+|Sprint |Aspectes positius |Aspectes a millorar |Accions concretes
+
+|Sprint 3
+|Bona comunicació, gran implicació i activitat dins i fora de l'escola.
+|Tot i que pensavem que no finalitzariem molts RF al final hem finalitzat totalment 7 RF i 1 esta mig acabat. Quedarien 4 RF complets per fer
+|Que la setmana que be tots nosaltres treballem a tope
+|===
