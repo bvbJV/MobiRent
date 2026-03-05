@@ -85,4 +85,31 @@
 
     <string name="err_foto_llicencia">Has de pujar la foto de la llicència.</string>
     <string name="err_foto_identificacio">Has de pujar la foto d\'identificació.</string>
+
+    <string name="filter_by_date_range">Filtrar per rang de dates</string>
+    <string name="start_date_dd_mm_yyyy">Data d\'inici (dd/mm/yyyy)</string>
+    <string name="end_date_dd_mm_yyyy">Data de fi (dd/mm/yyyy)</string>
+    <string name="apply_filter">Aplicar filtre</string>
+    <string name="sort_by_price">Ordenar per preu</string>
+    <string name="ascending">Ascendent</string>
+    <string name="descending">Descendent</string>
+    <string name="hour">%1$s €/hora</string>
+    <string name="electric">Elèctric</string>
+    <string name="hybrid">Híbrid</string>
+    <string name="diesel">Dièsel</string>
+    <string name="vehicle_details">Detall del vehicle</string>
+    <string name="power">Potència: %1$s</string>
+    <string name="color">Color: %1$s</string>
+    <string name="mileage_limit">Límit de quilometratge: %1$s</string>
+    <string name="minimum_rental_days">Dies mínims de lloguer: %1$s</string>
+    <string name="maximum_rental_days">Dies màxims de lloguer: %1$s</string>
+    <string name="standard_deposit">Fiança estàndard: %1$s</string>
+    <string name="book_vehicle">Reservar vehicle</string>
+    <string name="no_vehicles_available">No hi ha vehicles disponibles</string>
+    <string name="reservation_created_title">Reserva creada</string>
+    <string name="reservation_amount">Import: %1$s €</string>
+    <string name="view_detail">Veure detall</string>
+
+
+
 </resources>

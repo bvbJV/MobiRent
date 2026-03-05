@@ -84,4 +84,32 @@
 
     <string name="err_foto_llicencia">Tienes que subir la foto de la licencia.</string>
     <string name="err_foto_identificacio">Tienes que subir la foto de identificación.</string>
+
+
+    <string name="available_vehicles">Vehículos disponibles</string>
+    <string name="filter_by_date_range">Filtrar por rango de fechas</string>
+    <string name="start_date_dd_mm_yyyy">Fecha de inicio (dd/mm/yyyy)</string>
+    <string name="end_date_dd_mm_yyyy">Fecha de fin (dd/mm/yyyy)</string>
+    <string name="apply_filter">Aplicar filtro</string>
+    <string name="sort_by_price">Ordenar por precio</string>
+    <string name="ascending">Ascendente</string>
+    <string name="descending">Descendente</string>
+    <string name="hour">%1$s €/hora</string>
+    <string name="electric">Eléctrico</string>
+    <string name="hybrid">Híbrido</string>
+    <string name="diesel">Diésel</string>
+    <string name="vehicle_details">Detalles del vehículo</string>
+    <string name="power">Potencia: %1$s</string>
+    <string name="color">Color: %1$s</string>
+    <string name="mileage_limit">Límite de kilometraje: %1$s</string>
+    <string name="minimum_rental_days">Días mínimos de alquiler: %1$s</string>
+    <string name="maximum_rental_days">Días máximos de alquiler: %1$s</string>
+    <string name="standard_deposit">Fianza estándar: %1$s</string>
+    <string name="book_vehicle">Reservar vehículo</string>
+    <string name="no_vehicles_available">No hay vehículos disponibles</string>
+
+
+    <string name="reservation_created_title">Reserva creada</string>
+    <string name="reservation_amount">Importe: %1$s €</string>
+    <string name="view_detail">Ver detalle</string>
 </resources>
