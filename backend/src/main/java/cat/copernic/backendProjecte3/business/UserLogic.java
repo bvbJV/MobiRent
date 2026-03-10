@@ -53,31 +53,42 @@ public class UserLogic {
         return Optional.of(user.getRol());
     }
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private EmailService emailService;
+    EmailService emailService;
 
     public void recoverPassword(String email) {
 
-        Optional<User> userOptional = userRepository.findByEmail(email);
+        Optional<Usuari> userOptional = usuariRepository.findByEmail(email);
 
         if (userOptional.isEmpty()) {
             return;
         }
 
-        User user = userOptional.get();
+        Usuari user = userOptional.get();
 
-        String temporaryPassword = UUID.randomUUID().toString().substring(0, 8);
+        String tempPassword = generateTemporaryPassword();
 
-        user.setPassword(passwordEncoder.encode(temporaryPassword));
+        user.setPassword(PasswordHasher.encode(tempPassword));
 
-        userRepository.save(user);
+        usuariRepository.save(user);
 
-        emailService.sendRecoveryEmail(email, temporaryPassword);
+        emailService.sendPasswordRecoveryEmail(
+                user.getEmail(),
+                user.getNomComplet(),
+                tempPassword
+        );
+    }
+
+    private String generateTemporaryPassword() {
+
+        String chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789";
+        StringBuilder pass = new StringBuilder();
+
+        for (int i = 0; i < 10; i++) {
+            int index = (int) (Math.random() * chars.length());
+            pass.append(chars.charAt(index));
+        }
+
+        return pass.toString();
     }
 
 }

@@ -4,7 +4,8 @@ public class PasswordRecoveryRequest {
 
     private String email;
 
-    public PasswordRecoveryRequest() {}
+    public PasswordRecoveryRequest() {
+    }
 
     public PasswordRecoveryRequest(String email) {
         this.email = email;

@@ -68,13 +68,15 @@ public class AuthController {
 
     @PostMapping("/recover-password")
     public ResponseEntity<PasswordRecoveryResponse> recoverPassword(
-            @RequestBody PasswordRecoveryRequest request) {
+            @RequestBody PasswordRecoveryRequest request
+    ) {
 
         userLogic.recoverPassword(request.getEmail());
 
         return ResponseEntity.ok(
                 new PasswordRecoveryResponse(
-                        "If the email exists, a recovery email has been sent."
+                        "recover_sent",
+                        "If the email exists you will receive recovery instructions."
                 )
         );
     }
