@@ -5,17 +5,22 @@ import cat.copernic.backendProjecte3.business.UserLogic;
 import cat.copernic.backendProjecte3.dto.ClientRegistreDTO;
 import cat.copernic.backendProjecte3.dto.PasswordRecoveryRequest;
 import cat.copernic.backendProjecte3.dto.PasswordRecoveryResponse;
+import cat.copernic.backendProjecte3.dto.ResetPasswordRequest;
 import cat.copernic.backendProjecte3.entities.Client;
 import cat.copernic.backendProjecte3.exceptions.ErrorAltaException;
+import java.util.HashMap;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile; // IMPORTANTE
-
-import java.util.HashMap;
-import java.util.Map;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import tools.jackson.databind.ObjectMapper;
 
 @RestController
@@ -27,26 +32,20 @@ public class AuthController {
     private ClientService clientService;
 
     @Autowired
-    private ObjectMapper objectMapper; // Herramienta para convertir JSON a Objeto
-
-    @Autowired
     private UserLogic userLogic;
 
-    /**
-     * Endpoint para registrar un cliente desde el móvil con fotos.
-     */
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> register(
-            @RequestPart("clientData") String clientDataJson, // El JSON con los textos
-            @RequestPart(value = "fotoIdentificacio", required = false) MultipartFile fotoIdentificacio, // La foto 1
-            @RequestPart(value = "fotoLlicencia", required = false) MultipartFile fotoLlicencia // La foto 2
+            @RequestPart("clientData") String clientDataJson,
+            @RequestPart(value = "fotoIdentificacio", required = false) MultipartFile fotoIdentificacio,
+            @RequestPart(value = "fotoLlicencia", required = false) MultipartFile fotoLlicencia
     ) {
 
         try {
-            // 1. Convertimos el JSON de Android a nuestro DTO
             ClientRegistreDTO registerDTO = objectMapper.readValue(clientDataJson, ClientRegistreDTO.class);
-
-            // 2. Llamamos a la lógica pasándole el DTO y los archivos físicos
             Client nuevoCliente = clientService.registrarNouClient(registerDTO, fotoIdentificacio, fotoLlicencia);
 
             Map<String, Object> response = new HashMap<>();
@@ -58,7 +57,7 @@ public class AuthController {
         } catch (ErrorAltaException e) {
             Map<String, String> errorResponse = new HashMap<>();
             errorResponse.put("error", e.getMessage());
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse); // Esto Android lo lee como 409
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
 
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -67,16 +66,27 @@ public class AuthController {
     }
 
     @PostMapping("/recover-password")
-    public ResponseEntity<PasswordRecoveryResponse> recoverPassword(
-            @RequestBody PasswordRecoveryRequest request
-    ) {
+    public ResponseEntity<PasswordRecoveryResponse> recoverPassword(@RequestBody PasswordRecoveryRequest request) {
 
         userLogic.recoverPassword(request.getEmail());
 
         return ResponseEntity.ok(
                 new PasswordRecoveryResponse(
                         "recover_sent",
-                        "If the email exists you will receive recovery instructions."
+                        "If the email exists, you will receive recovery instructions shortly."
+                )
+        );
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<PasswordRecoveryResponse> resetPassword(@RequestBody ResetPasswordRequest request) {
+
+        userLogic.resetPassword(request.getToken(), request.getNewPassword());
+
+        return ResponseEntity.ok(
+                new PasswordRecoveryResponse(
+                        "password_reset_ok",
+                        "Your password has been updated successfully."
                 )
         );
     }

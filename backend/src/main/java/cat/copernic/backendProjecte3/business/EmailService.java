@@ -17,18 +17,20 @@ public class EmailService {
         this.mailSender = mailSender;
     }
 
-    public void sendPasswordRecoveryEmail(String to, String userName, String temporaryPassword) {
+    public void sendPasswordRecoveryEmail(String to, String userName, String token) {
 
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(from);
         message.setTo(to);
-        message.setSubject("AppVehicles - Password Recovery");
+        message.setSubject("AppVehicles - Password recovery");
 
         message.setText(
                 "Hello " + userName + ",\n\n" +
-                "Your temporary password is:\n\n" +
-                temporaryPassword + "\n\n" +
-                "Login and change it as soon as possible.\n\n" +
+                "We received a request to recover your password.\n\n" +
+                "Use this recovery token in the mobile app:\n\n" +
+                token + "\n\n" +
+                "This token expires in 30 minutes.\n\n" +
+                "If you did not request it, ignore this email.\n\n" +
                 "AppVehicles Team"
         );
 
