@@ -1,281 +1,272 @@
 package cat.copernic.appvehicles.client.ui.view
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import cat.copernic.appvehicles.R
+import cat.copernic.appvehicles.client.ui.viewmodel.EditProfileViewModel
+import coil.compose.AsyncImage
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditProfileScreen(
-    onBackClick: () -> Unit = {}
+    onLoggedOut: () -> Unit = {} // Lo dejamos por si lo usas, aunque la navegación va por State
 ) {
-    // Datos del perfil (mock/temporal para UI)
-    var name by remember { mutableStateOf("Anna") }
-    var surname by remember { mutableStateOf("Serra") }
-    var email by remember { mutableStateOf("anna@correu.com") }
-    var phone by remember { mutableStateOf("600123456") }
-    var address by remember { mutableStateOf("C/ Exemple, 123") }
+    val vm: EditProfileViewModel = viewModel()
+    val state by vm.uiState.collectAsState()
 
-    // Foto y documentación (simulados)
-    var selectedPhotoName by remember { mutableStateOf<String?>(null) }
-    var selectedDocName by remember { mutableStateOf<String?>(null) }
+    val snackbarHostState = remember { SnackbarHostState() }
 
-    // Mensajes UI
-    var errorMessage by remember { mutableStateOf<String?>(null) }
-    var successMessage by remember { mutableStateOf<String?>(null) }
+    LaunchedEffect(state.messageKey) {
+        state.messageKey?.let { key ->
+            // Mostramos el mensaje (traducido con la función que ya tenemos)
+            snackbarHostState.showSnackbar(
+                message = "Cambios guardados correctamente" // O usa stringResource(messageKeyToRes(key))
+            )
+            // Opcional: Podrías limpiar el mensaje en el VM aquí si quisieras que no se repita
+        }
+    }
 
-    val scrollState = rememberScrollState()
+    var showLogoutDialog by remember { mutableStateOf(false) }
+
+    // Controladores de los DatePickers
+    var showDatePickerDni by remember { mutableStateOf(false) }
+    val datePickerStateDni = rememberDatePickerState()
+    var showDatePickerLicense by remember { mutableStateOf(false) }
+    val datePickerStateLicense = rememberDatePickerState()
+
+    // Controladores de los Desplegables
+    var expaditNacionalitat by remember { mutableStateOf(false) }
+    val llistaPaisos = remember { java.util.Locale.getISOCountries().map { isoCode -> java.util.Locale("", isoCode).displayCountry }.sorted() }
+
+    var expaditLlicencia by remember { mutableStateOf(false) }
+    val llistatLlicencies = listOf("AM", "A1", "A2", "A", "B1", "B", "C1", "C", "D1", "D")
+
+    val pickPhoto = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri -> vm.onPhotoPicked(uri?.toString()) }
+    val pickDniImage = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri -> vm.onDniImagePicked(uri?.toString()) }
+    val pickLicenseImage = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri -> vm.onLicenseImagePicked(uri?.toString()) }
+
+    LaunchedEffect(Unit) { vm.loadProfile() }
+
+    // --- DIÁLOGOS DE FECHA ---
+    if (showDatePickerDni) {
+        DatePickerDialog(
+            onDismissRequest = { showDatePickerDni = false },
+            confirmButton = {
+                TextButton(onClick = {
+                    showDatePickerDni = false
+                    datePickerStateDni.selectedDateMillis?.let { millis ->
+                        val date = Instant.ofEpochMilli(millis).atZone(ZoneId.systemDefault()).toLocalDate()
+                        vm.onFieldChange(dataCaducitatDni = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+                    }
+                }) { Text(stringResource(R.string.acceptar)) }
+            },
+            dismissButton = { TextButton(onClick = { showDatePickerDni = false }) { Text(stringResource(R.string.cancel_lar)) } }
+        ) { DatePicker(state = datePickerStateDni) }
+    }
+
+    if (showDatePickerLicense) {
+        DatePickerDialog(
+            onDismissRequest = { showDatePickerLicense = false },
+            confirmButton = {
+                TextButton(onClick = {
+                    showDatePickerLicense = false
+                    datePickerStateLicense.selectedDateMillis?.let { millis ->
+                        val date = Instant.ofEpochMilli(millis).atZone(ZoneId.systemDefault()).toLocalDate()
+                        vm.onFieldChange(dataCaducitatCarnet = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+                    }
+                }) { Text(stringResource(R.string.acceptar)) }
+            },
+            dismissButton = { TextButton(onClick = { showDatePickerLicense = false }) { Text(stringResource(R.string.cancel_lar)) } }
+        ) { DatePicker(state = datePickerStateLicense) }
+    }
 
     Scaffold(
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
             TopAppBar(
-                title = { Text("Editar perfil") },
-                navigationIcon = {
-                    IconButton(onClick = onBackClick) {
-                        Icon(
-                            imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "Volver"
-                        )
-                    }
+                title = { Text(stringResource(R.string.edit_profile_title)) },
+                actions = {
+                    IconButton(onClick = { showLogoutDialog = true }) { Icon(Icons.Default.Logout, stringResource(R.string.logout)) }
                 }
             )
         }
     ) { padding ->
 
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(scrollState)
-                .padding(padding)
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(padding).padding(16.dp)
         ) {
 
-            Spacer(modifier = Modifier.height(16.dp))
+            if (state.isLoading) {
+                LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+                Spacer(Modifier.height(12.dp))
+            }
 
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-            ) {
-                Column(modifier = Modifier.padding(16.dp)) {
+            // --- MOSTRAR LISTA DE ERRORES (Como en Registro) ---
+            if (state.errorKeys.isNotEmpty()) {
+                val missatgeFinal = state.errorKeys.map { "• " + stringResource(errorKeyToRes(it)) }.joinToString(separator = "\n")
+                Text(
+                    text = missatgeFinal,
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(Modifier.height(16.dp))
+            }
 
-                    // ---------- FOTO ----------
-                    Text(
-                        text = "Foto de perfil",
-                        style = MaterialTheme.typography.titleMedium
-                    )
+            state.messageKey?.let {
+                Text(text = stringResource(messageKeyToRes(it)), color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold)
+                Spacer(Modifier.height(8.dp))
+            }
 
-                    Spacer(modifier = Modifier.height(8.dp))
+            // Extra: componente imagen (foto cliente)
+            Text(stringResource(R.string.profile_photo), style = MaterialTheme.typography.titleMedium)
+            AsyncImage(model = state.photoUri, contentDescription = null, modifier = Modifier.fillMaxWidth().height(180.dp))
+            OutlinedButton(onClick = { pickPhoto.launch("image/*") }, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.pick_profile_photo)) }
+            Spacer(Modifier.height(16.dp))
 
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        // Placeholder de foto
-                        Surface(
-                            modifier = Modifier.size(80.dp),
-                            color = MaterialTheme.colorScheme.surfaceVariant,
-                            shape = MaterialTheme.shapes.medium
-                        ) {
-                            Box(contentAlignment = Alignment.Center) {
-                                Text("Foto")
-                            }
-                        }
+            // --- CAMPOS DE TEXTO ---
+            OutlinedTextField(value = state.nomComplet, onValueChange = { vm.onFieldChange(nomComplet = it) }, label = { Text(stringResource(R.string.full_name_label)) }, modifier = Modifier.fillMaxWidth())
+            Spacer(Modifier.height(8.dp))
+            OutlinedTextField(value = state.email, onValueChange = { }, label = { Text(stringResource(R.string.email_readonly)) }, enabled = false, modifier = Modifier.fillMaxWidth())
+            Spacer(Modifier.height(8.dp))
+            OutlinedTextField(value = state.telefon, onValueChange = { vm.onFieldChange(telefon = it) }, label = { Text(stringResource(R.string.phone_label)) }, modifier = Modifier.fillMaxWidth())
+            Spacer(Modifier.height(8.dp))
+            OutlinedTextField(value = state.adreca, onValueChange = { vm.onFieldChange(adreca = it) }, label = { Text(stringResource(R.string.address_label)) }, modifier = Modifier.fillMaxWidth())
+            Spacer(Modifier.height(8.dp))
 
-                        Spacer(modifier = Modifier.width(16.dp))
-
-                        Column(modifier = Modifier.weight(1f)) {
-                            Button(
-                                onClick = {
-                                    // Simulación: "seleccionamos" una foto
-                                    selectedPhotoName = "foto_perfil.jpg"
-                                    successMessage = null
-                                    errorMessage = null
-                                }
-                            ) {
-                                Text("Cambiar foto")
-                            }
-
-                            Spacer(modifier = Modifier.height(6.dp))
-
-                            Text(
-                                text = selectedPhotoName ?: "Ninguna foto seleccionada",
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
-                    }
-
-                    Spacer(modifier = Modifier.height(20.dp))
-
-                    // ---------- DATOS ----------
-                    Text(
-                        text = "Dades personals",
-                        style = MaterialTheme.typography.titleMedium
-                    )
-
-                    Spacer(modifier = Modifier.height(12.dp))
-
-                    OutlinedTextField(
-                        value = name,
-                        onValueChange = { name = it },
-                        modifier = Modifier.fillMaxWidth(),
-                        label = { Text("Nom") },
-                        singleLine = true
-                    )
-
-                    Spacer(modifier = Modifier.height(12.dp))
-
-                    OutlinedTextField(
-                        value = surname,
-                        onValueChange = { surname = it },
-                        modifier = Modifier.fillMaxWidth(),
-                        label = { Text("Cognoms") },
-                        singleLine = true
-                    )
-
-                    Spacer(modifier = Modifier.height(12.dp))
-
-                    OutlinedTextField(
-                        value = email,
-                        onValueChange = { email = it },
-                        modifier = Modifier.fillMaxWidth(),
-                        label = { Text("Correu electrònic") },
-                        singleLine = true,
-                        keyboardOptions = KeyboardOptions(
-                            keyboardType = KeyboardType.Email
+            // --- DESPLEGABLE NACIONALIDAD ---
+            ExposedDropdownMenuBox(expanded = expaditNacionalitat, onExpandedChange = { expaditNacionalitat = !expaditNacionalitat }) {
+                OutlinedTextField(
+                    value = state.nacionalitat, onValueChange = {}, readOnly = true, label = { Text(stringResource(R.string.nationality_label)) },
+                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expaditNacionalitat) },
+                    modifier = Modifier.menuAnchor().fillMaxWidth()
+                )
+                ExposedDropdownMenu(expanded = expaditNacionalitat, onDismissRequest = { expaditNacionalitat = false }) {
+                    llistaPaisos.forEach { pais ->
+                        DropdownMenuItem(
+                            text = { Text(pais) },
+                            onClick = { vm.onFieldChange(nacionalitat = pais); expaditNacionalitat = false }
                         )
-                    )
-
-                    Spacer(modifier = Modifier.height(12.dp))
-
-                    OutlinedTextField(
-                        value = phone,
-                        onValueChange = { phone = it },
-                        modifier = Modifier.fillMaxWidth(),
-                        label = { Text("Telèfon") },
-                        singleLine = true,
-                        keyboardOptions = KeyboardOptions(
-                            keyboardType = KeyboardType.Phone
-                        )
-                    )
-
-                    Spacer(modifier = Modifier.height(12.dp))
-
-                    OutlinedTextField(
-                        value = address,
-                        onValueChange = { address = it },
-                        modifier = Modifier.fillMaxWidth(),
-                        label = { Text("Adreça") },
-                        singleLine = true
-                    )
-
-                    Spacer(modifier = Modifier.height(20.dp))
-
-                    // ---------- DOCUMENTACIÓN ----------
-                    Text(
-                        text = "Documentació",
-                        style = MaterialTheme.typography.titleMedium
-                    )
-
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    Text(
-                        text = "Adjunta la documentació necessària (exemple: DNI, carnet, etc.).",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-
-                    Spacer(modifier = Modifier.height(12.dp))
-
-                    Button(
-                        onClick = {
-                            // Simulación: "seleccionamos" un documento
-                            selectedDocName = "documentacio.pdf"
-                            successMessage = null
-                            errorMessage = null
-                        }
-                    ) {
-                        Text("Adjuntar document")
-                    }
-
-                    Spacer(modifier = Modifier.height(6.dp))
-
-                    Text(
-                        text = selectedDocName ?: "Cap document adjuntat",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-
-                    Spacer(modifier = Modifier.height(20.dp))
-
-                    // ---------- MENSAJES ----------
-                    if (errorMessage != null) {
-                        Text(
-                            text = errorMessage!!,
-                            color = MaterialTheme.colorScheme.error
-                        )
-                        Spacer(modifier = Modifier.height(12.dp))
-                    }
-
-                    if (successMessage != null) {
-                        Text(
-                            text = successMessage!!,
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                        Spacer(modifier = Modifier.height(12.dp))
-                    }
-
-                    // ---------- GUARDAR ----------
-                    Button(
-                        onClick = {
-                            // Validación mínima (sin complicar)
-                            val trimmedName = name.trim()
-                            val trimmedEmail = email.trim()
-
-                            if (trimmedName.isBlank()) {
-                                successMessage = null
-                                errorMessage = "El nom és obligatori"
-                                return@Button
-                            }
-
-                            val looksLikeEmail = trimmedEmail.contains("@") && trimmedEmail.contains(".")
-                            if (trimmedEmail.isBlank() || !looksLikeEmail) {
-                                successMessage = null
-                                errorMessage = "Correu no vàlid"
-                                return@Button
-                            }
-
-                            // Simulación de guardado OK
-                            errorMessage = null
-                            successMessage = "Canvis desats correctament"
-                        },
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text("Desar canvis")
                     }
                 }
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(Modifier.height(16.dp))
+            Text(stringResource(R.string.documentation), style = MaterialTheme.typography.titleMedium)
+            Spacer(Modifier.height(8.dp))
+
+            // --- FECHA DNI (CALENDARIO) ---
+            OutlinedTextField(
+                value = state.dataCaducitatDni, onValueChange = { }, readOnly = true, label = { Text(stringResource(R.string.id_expiry_label)) }, modifier = Modifier.fillMaxWidth(),
+                trailingIcon = { IconButton(onClick = { showDatePickerDni = true }) { Icon(Icons.Default.DateRange, stringResource(R.string.seleccionar_data)) } }
+            )
+
+            Spacer(Modifier.height(8.dp))
+            Text(stringResource(R.string.id_image), style = MaterialTheme.typography.bodyMedium)
+            AsyncImage(model = state.dniImageUri, contentDescription = null, modifier = Modifier.fillMaxWidth().height(160.dp))
+            OutlinedButton(onClick = { pickDniImage.launch("image/*") }, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.pick_id_image)) }
+            Spacer(Modifier.height(12.dp))
+
+            // --- DESPLEGABLE TIPO LICENCIA ---
+            ExposedDropdownMenuBox(expanded = expaditLlicencia, onExpandedChange = { expaditLlicencia = !expaditLlicencia }) {
+                OutlinedTextField(
+                    value = state.tipusCarnetConduir, onValueChange = {}, readOnly = true, label = { Text(stringResource(R.string.license_type_label)) },
+                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expaditLlicencia) },
+                    modifier = Modifier.menuAnchor().fillMaxWidth()
+                )
+                ExposedDropdownMenu(expanded = expaditLlicencia, onDismissRequest = { expaditLlicencia = false }) {
+                    llistatLlicencies.forEach { llicencia ->
+                        DropdownMenuItem(
+                            text = { Text(llicencia) },
+                            onClick = { vm.onFieldChange(tipusCarnetConduir = llicencia); expaditLlicencia = false }
+                        )
+                    }
+                }
+            }
+
+            Spacer(Modifier.height(8.dp))
+
+            // --- FECHA LICENCIA (CALENDARIO) ---
+            OutlinedTextField(
+                value = state.dataCaducitatCarnet, onValueChange = { }, readOnly = true, label = { Text(stringResource(R.string.license_expiry_label)) }, modifier = Modifier.fillMaxWidth(),
+                trailingIcon = { IconButton(onClick = { showDatePickerLicense = true }) { Icon(Icons.Default.DateRange, stringResource(R.string.seleccionar_data)) } }
+            )
+
+            Spacer(Modifier.height(8.dp))
+            Text(stringResource(R.string.license_image), style = MaterialTheme.typography.bodyMedium)
+            AsyncImage(model = state.licenseImageUri, contentDescription = null, modifier = Modifier.fillMaxWidth().height(160.dp))
+            OutlinedButton(onClick = { pickLicenseImage.launch("image/*") }, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.pick_license_image)) }
+            Spacer(Modifier.height(16.dp))
+
+            Text(stringResource(R.string.payment), style = MaterialTheme.typography.titleMedium)
+            Spacer(Modifier.height(8.dp))
+
+            // --- TARGETA DE CRÉDITO (Filtro numérico) ---
+            OutlinedTextField(
+                value = state.numeroTargetaCredit,
+                onValueChange = { text ->
+                    val nomesNumeros = text.filter { it.isDigit() }
+                    if (nomesNumeros.length <= 19) vm.onFieldChange(numeroTargetaCredit = nomesNumeros)
+                },
+                label = { Text(stringResource(R.string.credit_card_label)) },
+                modifier = Modifier.fillMaxWidth(), singleLine = true,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+            )
+
+            Spacer(Modifier.height(16.dp))
+
+            Button(onClick = { vm.saveChanges() }, modifier = Modifier.fillMaxWidth(), enabled = !state.isLoading) {
+                Text(stringResource(R.string.save_changes))
+            }
         }
+    }
+
+    if (showLogoutDialog) {
+        AlertDialog(
+            onDismissRequest = { showLogoutDialog = false },
+            title = { Text(stringResource(R.string.logout_confirm_title)) },
+            text = { Text(stringResource(R.string.logout_confirm_text)) },
+            confirmButton = {
+                TextButton(onClick = { showLogoutDialog = false; vm.logout(onSuccess = { onLoggedOut() }) }) { Text(stringResource(R.string.logout)) }
+            },
+            dismissButton = { TextButton(onClick = { showLogoutDialog = false }) { Text(stringResource(R.string.cancel)) } }
+        )
     }
 }
 
-@Preview(showBackground = true, widthDp = 360)
-@Composable
-private fun EditProfileScreenPreview() {
-    MaterialTheme {
-        EditProfileScreen()
-    }
+private fun errorKeyToRes(key: String): Int = when (key) {
+    "session_missing_dni", "session_missing_email" -> R.string.error_session_missing_dni
+    "full_name_required" -> R.string.err_nom_complet_buit
+    "invalid_name_format" -> R.string.err_nom_format
+    "invalid_card_format" -> R.string.err_targeta_format
+    "profile_load_error" -> R.string.error_profile_load
+    "profile_save_error" -> R.string.error_profile_save
+    "invalid_date_format", "invalid_date_format_dni" -> R.string.err_format_data
+    "license_expired" -> R.string.err_llicencia_caducada
+    "dni_expired" -> R.string.err_data_passada
+    "invalid_date", "invalid_date_dni" -> R.string.err_data_invalida
+    else -> R.string.error_generic
+}
+
+private fun messageKeyToRes(key: String): Int = when (key) {
+    "profile_saved" -> R.string.profile_saved
+    else -> R.string.profile_saved
 }

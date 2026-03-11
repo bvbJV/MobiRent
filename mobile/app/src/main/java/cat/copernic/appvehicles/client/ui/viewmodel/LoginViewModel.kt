@@ -1,29 +1,17 @@
-package cat.copernic.appvehicles.client.ui.viewmodel
+package cat.copernic.appvehicles.client.ui.viewmodel // Ajusta el paquete si lo mueves
 
 import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.delay
+import cat.copernic.appvehicles.usuariAnonim.data.repository.AuthRepository // Ajusta el import
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-data class LoginUiState(
-    val email: String = "",
-    val password: String = "",
-    val emailError: String? = null,
-    val passwordError: String? = null,
-    val generalError: String? = null,
-    val isLoading: Boolean = false,
-    val isLoggedIn: Boolean = false
-) {
-    val isLoginEnabled: Boolean
-        get() = email.isNotBlank() && password.isNotBlank() &&
-                emailError == null && passwordError == null
-}
-
-class LoginViewModel : ViewModel() {
+class LoginViewModel(
+    private val authRepository: AuthRepository // Inyectamos el repositorio aquí
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(LoginUiState())
     val uiState: StateFlow<LoginUiState> = _uiState
@@ -51,7 +39,6 @@ class LoginViewModel : ViewModel() {
     fun onLoginClick() {
         val state = _uiState.value
 
-        // Validación final antes de simular login
         val emailError = validateEmail(state.email)
         val passError = validatePassword(state.password)
 
@@ -61,33 +48,45 @@ class LoginViewModel : ViewModel() {
         }
 
         viewModelScope.launch {
+            // Ponemos la pantalla en modo carga y limpiamos errores anteriores
             _uiState.update { it.copy(isLoading = true, generalError = null) }
 
-            // Simulación temporal
-            delay(900)
+            // Llamada REAL a la API a través del Repositorio
+            val result = authRepository.login(state.email, state.password)
 
-            // Credenciales mock de prueba (Cambiar o eliminar cuando este conectado con la API)
-            val ok = (state.email == "client@test.com" && state.password == "1234")
-
-            _uiState.update {
-                it.copy(
-                    isLoading = false,
-                    isLoggedIn = ok,
-                    generalError = if (!ok) "Credenciales incorrectas" else null
-                )
-            }
+            result.fold(
+                onSuccess = {
+                    // Si va bien, el repositorio ya guardó la sesión. Solo actualizamos la UI.
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false,
+                            isLoggedIn = true,
+                            generalError = null
+                        )
+                    }
+                },
+                onFailure = { exception ->
+                    // Si falla (credenciales incorrectas, error de red), mostramos el error
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false,
+                            isLoggedIn = false,
+                            generalError = exception.message
+                        )
+                    }
+                }
+            )
         }
     }
 
     private fun validateEmail(value: String): String? {
-        if (value.isBlank()) return "Introduce el correo"
-        if (!Patterns.EMAIL_ADDRESS.matcher(value).matches()) return "Correo no válido"
+        if (value.isBlank()) return "email_required"
+        if (!Patterns.EMAIL_ADDRESS.matcher(value).matches()) return "email_invalid"
         return null
     }
 
     private fun validatePassword(value: String): String? {
-        if (value.isBlank()) return "Introduce la contraseña"
-        // No añadimos reglas extra porque no están justificadas por el enunciado.
+        if (value.isBlank()) return "password_required"
         return null
     }
 }
