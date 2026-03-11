@@ -62,7 +62,15 @@
     <string name="status_cancelled">Cancelada</string>
     <string name="status_finished">Finalizada</string>
     <string name="cancel_reservation">Cancelar reserva</string>
-    <string name="confirm_cancel_question">¿Seguro que quieres cancelar esta reserva?</string>
+    <string name="confirm_cancel_question">Esteu segur que voleu cancel·lar aquesta reserva?</string>
+    <string name="cannot_cancel_started_finished">Las reservas iniciadas o finalizadas no se pueden cancelar.</string>
+
+    <string name="cancellation_notification_title">Notificación de cancelación</string>
+    <string name="email_to">Para: %1$s</string>
+    <string name="email_subject_cancellation">Asunto: Confirmación de cancelación de la reserva</string>
+    <string name="email_body_greeting">Cuerpo del mensaje: Hola,</string>
+    <string name="email_body_cancelled_vehicle">Tu reserva para el vehículo %1$s ha sido cancelada correctamente.</string>
+    <string name="email_body_refund">Se ha aplicado un reembolso de %1$s €.</string>
 
     <!-- Reservation creation -->
     <string name="create_reservation_title">Nueva reserva</string>
@@ -77,6 +85,20 @@
     <string name="rental_cost">Coste del alquiler</string>
     <string name="total_to_pay">TOTAL A PAGAR</string>
     <string name="confirm_reservation">Confirmar reserva</string>
+    <string name="error_cancel_prefix">Error al anular la reserva</string>
+    <string name="error_generic_title">Algo ha salido mal</string>
+    <string name="error_load_reservation_details">No hemos podido cargar los detalles de la reserva. Por favor, comprueba tu conexión.</string>
+    <string name="error_load_reservations">No hemos podido cargar las reservas.</string>
+    <string name="error_dates_required">Por favor, selecciona las fechas de inicio y fin.</string>
+    <string name="error_invalid_date_range">Fecha no válida. La fecha de inicio debe ser anterior a la fecha de fin.</string>
+
+    <string name="login_required_title">Debes iniciar sesión</string>
+    <string name="login_required_desc">Inicia sesión desde tu perfil para poder utilizar este servicio.</string>
+    <string name="no_reservations_found">No tienes ninguna reserva actualmente.</string>
+
+    <string name="close">Cerrar</string>
+    <string name="sort_list">Ordenar lista</string>
+
 
     <!-- Login -->
     <string name="login_title">Inicio de sesión</string>
