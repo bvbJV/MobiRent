@@ -83,7 +83,7 @@
     <string name="recover_success" tools:ignore="DuplicateDefinition">Instruccions de recuperació enviades</string>
     <string name="password_reset_success">Contrasenya actualitzada correctament</string>
     <string name="error_recover_failed">La sol·licitud de recuperació ha fallat</string>
-    <string name="error_reset_failed">No s'ha pogut restablir la contrasenya</string>
+    <string name="error_reset_failed">No s´ha pogut restablir la contrasenya</string>
     <string name="error_token_required">El token de recuperació és obligatori</string>
     <string name="error_password_required" tools:ignore="DuplicateDefinition">La contrasenya és obligatòria</string>
     <string name="error_password_too_short">La contrasenya ha de tenir almenys 6 caràcters</string>
