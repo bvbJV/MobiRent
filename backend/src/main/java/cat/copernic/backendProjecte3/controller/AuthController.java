@@ -30,6 +30,13 @@ import org.springframework.web.multipart.MultipartFile; // IMPORTANTE
 import java.util.HashMap;
 import java.util.Map;
 
+import cat.copernic.backendProjecte3.business.UserLogic;
+import cat.copernic.backendProjecte3.dto.LoginRequest;
+import cat.copernic.backendProjecte3.dto.LoginResponse;
+import cat.copernic.backendProjecte3.exceptions.AccesDenegatException;
+import cat.copernic.backendProjecte3.entities.Usuari;
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/api/auth")
 @CrossOrigin

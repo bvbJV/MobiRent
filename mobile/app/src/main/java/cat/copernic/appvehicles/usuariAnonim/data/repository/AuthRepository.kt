@@ -1,5 +1,7 @@
 package cat.copernic.appvehicles.usuariAnonim.data.repository
 
+import cat.copernic.appvehicles.core.auth.SessionManager
+import cat.copernic.appvehicles.model.LoginRequest
 import cat.copernic.appvehicles.usuariAnonim.data.api.remote.AuthApiService
 import cat.copernic.appvehicles.usuariAnonim.data.model.PasswordRecoveryRequest
 import cat.copernic.appvehicles.usuariAnonim.data.model.PasswordRecoveryResponse
@@ -8,8 +10,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import org.json.JSONObject
 
-class AuthRepository(private val api: AuthApiService) {
+class AuthRepository(
+    private val api: AuthApiService,
+    private val sessionManager: SessionManager // <-- Añadimos el SessionManager aquí
+) {
 
     suspend fun register(
         clientData: RequestBody,
