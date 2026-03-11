@@ -20,13 +20,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 import tools.jackson.databind.ObjectMapper;
 
 /**
@@ -71,15 +68,15 @@ public class AuthController {
      * @param fotoLlicencia imagen de la licencia de conducir.
      * @return respuesta HTTP con el resultado del alta.
      */
-    @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> register(
-            @RequestPart("clientData") String clientDataJson,
-            @RequestPart(value = "fotoIdentificacio", required = false) MultipartFile fotoIdentificacio,
-            @RequestPart(value = "fotoLlicencia", required = false) MultipartFile fotoLlicencia
-    ) {
+    /**
+     * Endpoint para registrar un cliente desde el móvil (recibe JSON con imágenes en Base64).
+     */
+    @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> register(@RequestBody ClientRegistreDTO registerDTO) {
+
         try {
-            ClientRegistreDTO registerDTO = objectMapper.readValue(clientDataJson, ClientRegistreDTO.class);
-            Client nuevoCliente = clientService.registrarNouClient(registerDTO, fotoIdentificacio, fotoLlicencia);
+            // 1. Llamamos a la lógica pasándole el DTO (que ya incluye las fotos en Base64)
+            Client nuevoCliente = clientService.registrarNouClient(registerDTO);
 
             Map<String, Object> response = new HashMap<>();
             response.put("message", "Usuari registrat correctament");
@@ -90,12 +87,12 @@ public class AuthController {
         } catch (ErrorAltaException e) {
             Map<String, String> errorResponse = new HashMap<>();
             errorResponse.put("error", e.getMessage());
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse); // 409 Conflict
 
         } catch (Exception e) {
             Map<String, String> errorResponse = new HashMap<>();
             errorResponse.put("error", "Error intern del servidor: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse); // 500
         }
     }
 
