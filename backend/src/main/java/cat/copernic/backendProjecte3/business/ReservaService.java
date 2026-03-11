@@ -7,39 +7,36 @@ package cat.copernic.backendProjecte3.business;
 import cat.copernic.backendProjecte3.entities.Client;
 import cat.copernic.backendProjecte3.entities.Reserva;
 import cat.copernic.backendProjecte3.entities.Vehicle;
-import cat.copernic.backendProjecte3.enums.EstatVehicle;
-import cat.copernic.backendProjecte3.enums.UserRole;
-import cat.copernic.backendProjecte3.exceptions.AccesDenegatException;
-import cat.copernic.backendProjecte3.exceptions.DadesNoTrobadesException;
-import cat.copernic.backendProjecte3.exceptions.ReservaDatesNoValidsException;
 import cat.copernic.backendProjecte3.exceptions.ReservaNoTrobadaException;
 import cat.copernic.backendProjecte3.exceptions.VehicleNoDisponibleException;
 import cat.copernic.backendProjecte3.exceptions.ReservaNoCancelableException;
 import cat.copernic.backendProjecte3.repository.ClientRepository;
 import cat.copernic.backendProjecte3.repository.ReservaRepository;
 import cat.copernic.backendProjecte3.repository.VehicleRepository;
-import jakarta.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Value;
 import cat.copernic.backendProjecte3.dto.CancelReservaResponse;
 
-/**
- *
- * @author manel
- */
 @Service
 public class ReservaService {
 
-    @Autowired
-    private ReservaRepository reservaRepo;
+    private final ReservaRepository reservaRepository;
+    private final VehicleRepository vehicleRepository;
+    private final ClientRepository clientRepository;
 
-    @Autowired
-    private VehicleRepository vehicleRepo;
+    public ReservaService(
+            ReservaRepository reservaRepository,
+            VehicleRepository vehicleRepository,
+            ClientRepository clientRepository
+    ) {
+        this.reservaRepository = reservaRepository;
+        this.vehicleRepository = vehicleRepository;
+        this.clientRepository = clientRepository;
+    }
 
     @Autowired
     private ClientRepository clientRepo;
@@ -50,25 +47,70 @@ public class ReservaService {
     @Value("${reserva.cancel.fullRefundDays:3}")
     private int fullRefundDays;
 
-    public List<Reserva> obtenirTotes() {
-        return reservaRepo.findAll();
+        // buscar vehicle
+        Vehicle vehicle = vehicleRepository.findById(matricula)
+                .orElseThrow(() -> new RuntimeException("Vehicle no trobat"));
+
+        // buscar client
+        Client client = clientRepository.findById(emailClient)
+                .orElseThrow(() -> new RuntimeException("Client no trobat"));
+
+        // calcular dias
+        long dies = ChronoUnit.DAYS.between(inici, fi);
+        if (dies == 0) {
+            dies = 1;
+        }
+
+        // validar minimo dias
+        if (dies < vehicle.getMinDiesLloguer()) {
+            throw new RuntimeException(
+                    "Aquest vehicle requereix un mínim de "
+                    + vehicle.getMinDiesLloguer() + " dies de lloguer"
+            );
+        }
+
+        // validar maximo dias
+        if (dies > vehicle.getMaxDiesLloguer()) {
+            throw new RuntimeException(
+                    "Aquest vehicle permet un màxim de "
+                    + vehicle.getMaxDiesLloguer() + " dies de lloguer"
+            );
+        }
+
+        // calcular precio total
+        BigDecimal preuDia = vehicle.getPreuHora();
+        BigDecimal total = preuDia.multiply(BigDecimal.valueOf(dies));
+
+        // crear reserva
+        Reserva reserva = new Reserva();
+        reserva.setVehicle(vehicle);
+        reserva.setClient(client);
+        reserva.setDataInici(inici);
+        reserva.setDataFi(fi);
+        reserva.setImportTotal(total);
+        reserva.setFiancaPagada(vehicle.getFiancaEstandard());
+
+        // guardar
+        return reservaRepository.save(reserva);
+    }
+
+    // ===============================
+    // METODOS QUE USA EL CONTROLLER
+    // ===============================
+
+    public List<Reserva> obtenirPerClient(String email) {
+        return reservaRepository.findByClient_Email(email);
     }
 
     public Reserva obtenirPerId(Long id) throws ReservaNoTrobadaException {
-        return reservaRepo.findById(id)
-                .orElseThrow(() -> new ReservaNoTrobadaException("Reserva no trobada: " + id));
+        return reservaRepository.findById(id)
+                .orElseThrow(() -> new ReservaNoTrobadaException("Reserva no trobada"));
     }
 
-    public List<Reserva> obtenirPerClient(String email) {
-        return reservaRepo.findByClient_Email(email);
-    }
+    public void anularReserva(Long id, String userName) throws ReservaNoTrobadaException {
 
-    @Transactional
-    public void eliminarReserva(Long id) {
-        reservaRepo.deleteById(id);
-    }
-    
-    //TODO: recuperar totes les reserves
+        Reserva reserva = reservaRepository.findById(id)
+                .orElseThrow(() -> new ReservaNoTrobadaException("Reserva no trobada"));
 
     //TODO: recuperar una reserva
     
