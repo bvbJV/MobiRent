@@ -1,6 +1,7 @@
 package cat.copernic.appvehicles.usuariAnonim.data.repository
 
 import cat.copernic.appvehicles.core.auth.SessionManager
+import cat.copernic.appvehicles.model.ClientRegisterRequest
 import cat.copernic.appvehicles.model.LoginRequest
 import cat.copernic.appvehicles.usuariAnonim.data.api.remote.AuthApiService
 import cat.copernic.appvehicles.usuariAnonim.data.model.PasswordRecoveryRequest
@@ -37,23 +38,25 @@ class AuthRepository(
      * @param fotoLlicencia imagen de la licencia de conducir.
      * @return {@code Result.success(true)} si el alta se completa correctamente.
      */
-    suspend fun register(
-        clientData: RequestBody,
-        fotoIdentificacio: MultipartBody.Part,
-        fotoLlicencia: MultipartBody.Part
-    ): Result<Boolean> {
+    suspend fun register(request: ClientRegisterRequest): Result<Boolean> {
         return withContext(Dispatchers.IO) {
             try {
-                val response = api.register(clientData, fotoIdentificacio, fotoLlicencia)
+                // Pasamos directamente el objeto request a la API
+                val response = api.register(request)
+
 
                 if (response.isSuccessful) {
                     Result.success(true)
                 } else {
                     val errorBody = response.errorBody()?.string()
                     val errorMessage = if (!errorBody.isNullOrEmpty()) {
-                        errorBody
+                        try {
+                            JSONObject(errorBody).getString("error")
+                        } catch (e: Exception) {
+                            errorBody
+                        }
                     } else {
-                        "Register failed: HTTP ${response.code()}"
+                        "Error en el registre: Codi ${response.code()}"
                     }
                     Result.failure(Exception(errorMessage))
                 }
@@ -62,6 +65,7 @@ class AuthRepository(
             }
         }
     }
+
 
     /**
      * Solicita al backend el envío del correo de recuperación de contraseña.
