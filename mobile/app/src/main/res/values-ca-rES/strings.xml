@@ -19,12 +19,12 @@
     <string name="acceptar">Aceptar</string>
     <string name="show">Mostrar</string>
     <string name="hide">Ocultar</string>
-    <string name="save_changes">Guardar cambios</string>
-    <string name="seleccionar_data">Seleccionar fecha</string>
+    <string name="save_changes">Desar canvis</string>
+    <string name="seleccionar_data">Seleccionar data</string>
 
     <!-- Vehicles -->
-    <string name="available_vehicles">Vehículos disponibles</string>
-    <string name="available_vehicle">Selecciona un vehículo</string>
+    <string name="available_vehicles">Vehicles disponibles</string>
+    <string name="available_vehicle">Selecciona un vehicle</string>
     <string name="no_vehicles_available">No hay vehículos disponibles</string>
     <string name="filter_by_date_range">Filtrar por rango de fechas</string>
     <string name="apply_filter">Aplicar filtro</string>
@@ -63,9 +63,31 @@
     <string name="status_finished">Finalizada</string>
     <string name="cancel_reservation">Cancelar reserva</string>
     <string name="confirm_cancel_question">¿Seguro que quieres cancelar esta reserva?</string>
+    <string name="cannot_cancel_started_finished">Les reserves iniciades o finalitzades no es poden cancel·lar.</string>
 
+    <string name="email_body_greeting">Cos del missatge: Hola,</string>
+    <string name="email_body_cancelled_vehicle">La teva reserva del vehicle %1$s s\'ha cancel·lat correctament.</string>
+
+    <string name="email_body_refund">S\'ha aplicat un reemborsament de %1$s €.</string>
+    <string name="cancellation_notification_title">Notificació de cancel·lació</string>
+    <string name="email_to">Per a: %1$s</string>
+    <string name="email_subject_cancellation">Assumpte: Confirmació de cancel·lació de la reserva</string>
+
+    <string name="error_cancel_prefix">Error anul·lant reserva</string>
+    <string name="error_generic_title">Alguna cosa ha anat malament</string>
+    <string name="error_load_reservation_details">No hem pogut carregar els detalls de la reserva. Si us plau, comprova la teva connexió.</string>
+    <string name="error_load_reservations">No hem pogut carregar les reserves.</string>
+    <string name="error_dates_required">Si us plau, selecciona les dates d\'inici i finalització.</string>
+    <string name="error_invalid_date_range">Data invàlida. La data d\'inici ha de ser anterior a la data final.</string>
+
+    <string name="login_required_title">Has d\'iniciar sessió</string>
+    <string name="login_required_desc">Inicia sessió des del teu perfil per poder utilitzar aquest servei.</string>
+    <string name="no_reservations_found">No tens cap reserva actualment.</string>
+
+    <string name="close">Tancar</string>
+    <string name="sort_list">Ordenar llista</string>
     <!-- Reservation creation -->
-    <string name="create_reservation_title">Nueva reserva</string>
+    <string name="create_reservation_title">Nova reserva</string>
     <string name="select_dates">Selecciona las fechas</string>
     <string name="start_date">Fecha de inicio</string>
     <string name="end_date">Fecha de fin</string>

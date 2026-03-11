@@ -3,7 +3,11 @@ package cat.copernic.appvehicles.core.navigation
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -21,7 +25,7 @@ import cat.copernic.appvehicles.reserva.data.api.remote.RetrofitProvider
 import cat.copernic.appvehicles.reserva.data.repository.ReservaRepository
 import cat.copernic.appvehicles.reserva.ui.view.ReserveListScreen
 import cat.copernic.appvehicles.reserva.ui.view.ReservationDetailScreen
-import cat.copernic.appvehicles.reserva.ui.view.CreateReservationScreen // <-- PANTALLA NOVA
+import cat.copernic.appvehicles.reserva.ui.view.CreateReservationScreen
 import cat.copernic.appvehicles.reserva.viewmodel.ReservaViewModel
 import cat.copernic.appvehicles.reserva.viewmodel.ReservaViewModelFactory
 import cat.copernic.appvehicles.usuariAnonim.ui.view.RegisterScreen
@@ -35,11 +39,19 @@ import cat.copernic.appvehicles.vehicle.ui.view.VehicleLlistarScreen
 import cat.copernic.appvehicles.vehicle.ui.viewmodel.VehicleViewModel
 import cat.copernic.appvehicles.vehicle.ui.viewmodel.VehicleViewModelFactory
 
+// Import CLAU per llegir qui està loguejat
+import cat.copernic.appvehicles.core.auth.SessionManager
+
 @Composable
 fun MainScreen(
     repository: AuthRepository
 ) {
     val navController = rememberNavController()
+
+    // OBTENIR L'EMAIL REAL DEL MÒBIL
+    val context = LocalContext.current
+    val sessionManager = remember { SessionManager(context) }
+    val userEmail by sessionManager.userEmailFlow.collectAsState(initial = "")
 
     // 1. Instanciar el ViewModel de Reserves
     val reservaViewModel: ReservaViewModel = viewModel(
@@ -48,13 +60,12 @@ fun MainScreen(
         )
     )
 
-    // 2. Instanciar el ViewModel de Vehicles (Necessari pel desplegable de crear reserva)
+    // 2. Instanciar el ViewModel de Vehicles
     val vehicleViewModel: VehicleViewModel = viewModel(
         factory = VehicleViewModelFactory(
             VehicleRepository(VehicleRetrofitProvider.vehicleApi)
         )
     )
-
 
     Scaffold(
         bottomBar = { AppBottomNavigation(navController) }
@@ -66,23 +77,21 @@ fun MainScreen(
             modifier = Modifier.padding(paddingValues)
         ) {
 
-            // -----------------------------
             // HOME
-            // -----------------------------
             composable(AppRoutes.Inici.route) {
                 HomeScreen(
-                    viewModel = vehicleViewModel, // <-- Li passem el ViewModel real!
-                    onVehicleClick = { matricula -> // <-- Canviem vehicleId per matricula
+                    viewModel = vehicleViewModel,
+                    onVehicleClick = { matricula ->
                         navController.navigate("${AppRoutes.VehicleDetail.route}/$matricula")
                     }
                 )
             }
 
-            // -----------------------------
             // RESERVES LIST
-            // -----------------------------
             composable(AppRoutes.Reserves.route) {
                 ReserveListScreen(
+                    userEmail = userEmail ?: "", // <-- Li passem l'email REAL loguejat!
+                    viewModel = reservaViewModel,
                     onBackClick = { navController.popBackStack() },
                     onReservaSelected = { idReserva ->
                         navController.navigate("reserva_detail/$idReserva")
@@ -90,9 +99,7 @@ fun MainScreen(
                 )
             }
 
-            // -----------------------------
             // RESERVA DETAIL
-            // -----------------------------
             composable(
                 route = "reserva_detail/{idReserva}",
                 arguments = listOf(
@@ -103,24 +110,26 @@ fun MainScreen(
                 ReservationDetailScreen(
                     reservaId = idReserva,
                     viewModel = reservaViewModel,
+                    userEmail = userEmail ?: "", // <-- Li passem l'email REAL loguejat!
                     onNavigateBack = { navController.popBackStack() }
                 )
             }
 
-            // -----------------------------
-            // RESERVA CREATE (La teva pantalla!)
-            // -----------------------------
-            composable("reserva_create") {
-                // Usuari fixat (hardcodejat) tal com has demanat, ja que a la BD existeix
-                val userEmail = "maria@test.com"
+            // RESERVA CREATE (CORREGIT AMB MATRÍCULA)
+            composable(
+                route = "reserva_create/{matricula}", // <-- Això arregla el bug del cotxe buit!
+                arguments = listOf(navArgument("matricula") { type = NavType.StringType })
+            ) { backStackEntry ->
+
+                val matriculaEscollida = backStackEntry.arguments?.getString("matricula") ?: ""
 
                 CreateReservationScreen(
+                    matriculaFixa = matriculaEscollida,
                     onNavigateBack = { navController.popBackStack() },
                     viewModel = reservaViewModel,
-                    vehicleViewModel = vehicleViewModel, // Passem els vehicles reals
-                    userEmail = userEmail,
+                    vehicleViewModel = vehicleViewModel,
+                    userEmail = userEmail ?: "", // <-- L'email real!
                     onReservaCreada = { idReserva ->
-                        // Quan es crea, anem al detall i netegem la navegació
                         navController.navigate("reserva_detail/$idReserva") {
                             popUpTo(AppRoutes.Vehicles.route)
                         }
@@ -128,17 +137,11 @@ fun MainScreen(
                 )
             }
 
-            // -----------------------------
-            // PERFIL -> RF04 GATE
-            // -----------------------------
-            // -----------------------------
-            // PERFIL -> RF04 GATE
-            // -----------------------------
+            // PERFIL
             composable(AppRoutes.Perfil.route) {
                 ProfileEntryScreen(
                     authRepository = repository,
                     onLoginSuccessNavigate = {
-                        // Navegamos al inicio y limpiamos la pila para no poder volver al login dándole atrás
                         navController.navigate(AppRoutes.Inici.route) {
                             popUpTo(AppRoutes.Inici.route) { inclusive = true }
                         }
@@ -146,21 +149,17 @@ fun MainScreen(
                 )
             }
 
-            // -----------------------------
             // VEHICLES LIST
-            // -----------------------------
             composable(AppRoutes.Vehicles.route) {
                 VehicleLlistarScreen(
                     viewModel = vehicleViewModel,
-                    onVehicleClick = { matricula: String -> // Passem la matricula real!
+                    onVehicleClick = { matricula: String ->
                         navController.navigate("${AppRoutes.VehicleDetail.route}/$matricula")
                     }
                 )
             }
 
-            // -----------------------------
             // VEHICLE DETAIL
-            // -----------------------------
             composable(
                 route = "${AppRoutes.VehicleDetail.route}/{matricula}",
                 arguments = listOf(
@@ -173,16 +172,13 @@ fun MainScreen(
                     matricula = matricula,
                     viewModel = vehicleViewModel,
                     onBackClick = { navController.popBackStack() },
-                    // Connectem el botó de reservar amb la ruta de reserva_create!
-                    onReservarClick = { navController.navigate("reserva_create") }
+                    // CORREGIT: Passem la matricula a la següent pantalla!
+                    onReservarClick = { navController.navigate("reserva_create/$matricula") }
                 )
             }
 
-            // -----------------------------
-// REGISTER
-// -----------------------------
+            // REGISTER
             composable(AppRoutes.Register.route) {
-
                 val registerViewModel: RegisterViewModel = viewModel(
                     factory = RegisterViewModelFactory(repository)
                 )
@@ -191,7 +187,6 @@ fun MainScreen(
                     viewModel = registerViewModel,
                     onNavigateBack = { navController.popBackStack() },
                     onRegisterSuccess = {
-                        // Cuando el registro se complete
                         navController.navigate(AppRoutes.Inici.route) {
                             popUpTo(AppRoutes.Register.route) { inclusive = true }
                         }
