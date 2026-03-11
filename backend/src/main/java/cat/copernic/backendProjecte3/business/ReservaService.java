@@ -1,15 +1,13 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package cat.copernic.backendProjecte3.business;
 
+import cat.copernic.backendProjecte3.dto.CancelReservaResponse;
 import cat.copernic.backendProjecte3.entities.Client;
 import cat.copernic.backendProjecte3.entities.Reserva;
 import cat.copernic.backendProjecte3.entities.Vehicle;
-import cat.copernic.backendProjecte3.exceptions.ReservaNoTrobadaException;
-import cat.copernic.backendProjecte3.exceptions.VehicleNoDisponibleException;
-import cat.copernic.backendProjecte3.exceptions.ReservaNoCancelableException;
+import cat.copernic.backendProjecte3.enums.EstatReserva;
+import cat.copernic.backendProjecte3.enums.EstatVehicle;
+import cat.copernic.backendProjecte3.enums.UserRole;
+import cat.copernic.backendProjecte3.exceptions.*;
 import cat.copernic.backendProjecte3.repository.ClientRepository;
 import cat.copernic.backendProjecte3.repository.ReservaRepository;
 import cat.copernic.backendProjecte3.repository.VehicleRepository;
@@ -17,10 +15,10 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import cat.copernic.backendProjecte3.dto.CancelReservaResponse;
-import cat.copernic.backendProjecte3.enums.EstatReserva;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ReservaService {
@@ -28,6 +26,12 @@ public class ReservaService {
     private final ReservaRepository reservaRepository;
     private final VehicleRepository vehicleRepository;
     private final ClientRepository clientRepository;
+
+    @Autowired
+    private UserLogic userLogic;
+
+    @Value("${reserva.cancel.fullRefundDays:3}")
+    private int fullRefundDays;
 
     public ReservaService(
             ReservaRepository reservaRepository,
@@ -39,66 +43,6 @@ public class ReservaService {
         this.clientRepository = clientRepository;
     }
 
-    @Autowired
-    private ClientRepository clientRepo;
-    
-    @Autowired
-    private UserLogic userLogic;
-    
-    @Value("${reserva.cancel.fullRefundDays:3}")
-    private int fullRefundDays;
-
-        // buscar vehicle
-        Vehicle vehicle = vehicleRepository.findById(matricula)
-                .orElseThrow(() -> new RuntimeException("Vehicle no trobat"));
-
-        // buscar client
-        Client client = clientRepository.findById(emailClient)
-                .orElseThrow(() -> new RuntimeException("Client no trobat"));
-
-        // calcular dias
-        long dies = ChronoUnit.DAYS.between(inici, fi);
-        if (dies == 0) {
-            dies = 1;
-        }
-
-        // validar minimo dias
-        if (dies < vehicle.getMinDiesLloguer()) {
-            throw new RuntimeException(
-                    "Aquest vehicle requereix un mínim de "
-                    + vehicle.getMinDiesLloguer() + " dies de lloguer"
-            );
-        }
-
-        // validar maximo dias
-        if (dies > vehicle.getMaxDiesLloguer()) {
-            throw new RuntimeException(
-                    "Aquest vehicle permet un màxim de "
-                    + vehicle.getMaxDiesLloguer() + " dies de lloguer"
-            );
-        }
-
-        // calcular precio total
-        BigDecimal preuDia = vehicle.getPreuHora();
-        BigDecimal total = preuDia.multiply(BigDecimal.valueOf(dies));
-
-        // crear reserva
-        Reserva reserva = new Reserva();
-        reserva.setVehicle(vehicle);
-        reserva.setClient(client);
-        reserva.setDataInici(inici);
-        reserva.setDataFi(fi);
-        reserva.setImportTotal(total);
-        reserva.setFiancaPagada(vehicle.getFiancaEstandard());
-
-        // guardar
-        return reservaRepository.save(reserva);
-    }
-
-    // ===============================
-    // METODOS QUE USA EL CONTROLLER
-    // ===============================
-
     public List<Reserva> obtenirPerClient(String email) {
         return reservaRepository.findByClient_Email(email);
     }
@@ -108,55 +52,34 @@ public class ReservaService {
                 .orElseThrow(() -> new ReservaNoTrobadaException("Reserva no trobada"));
     }
 
-    public void anularReserva(Long id, String userName) throws ReservaNoTrobadaException {
-
-        Reserva reserva = reservaRepository.findById(id)
-                .orElseThrow(() -> new ReservaNoTrobadaException("Reserva no trobada"));
-
-    //TODO: recuperar una reserva
-    
-    //TODO: consultar en un rang de dates els vehicles no reservats
-    
-    //TODO: lliurar vehicle
-
-    /***
-     * Crea una reserva entre dies dates pel client i vehicle solicitat
-     * @param emailClient
-     * @param matricula
-     * @param inici
-     * @param fi
-     * @param userName
-     * @return 
-     * @throws cat.copernic.backendProjecte3.exceptions.ReservaDatesNoValidsException les dates no son vàlides
-     * @throws cat.copernic.backendProjecte3.exceptions.VehicleNoDisponibleException el vehicle està de baixa
-     */
     @Transactional
-    public Reserva crearReserva(String emailClient, String matricula, LocalDate inici, LocalDate fi, String userName) throws ReservaDatesNoValidsException, VehicleNoDisponibleException, AccesDenegatException, DadesNoTrobadesException {
-        
-        //control de ROL
-        UserRole rol = userLogic.getRole(userName).orElseThrow();
+    public Reserva crearReserva(String emailClient, String matricula, LocalDate inici, LocalDate fi, String userName) 
+            throws ReservaDatesNoValidsException, VehicleNoDisponibleException, AccesDenegatException, DadesNoTrobadesException {
+
+        // control de ROL
+        UserRole rol = userLogic.getRole(userName).orElseThrow(() -> new AccesDenegatException("Usuari no trobat o sense rol"));
         if (rol != UserRole.CLIENT && rol != UserRole.AGENT && rol != UserRole.ADMIN) {
             throw new AccesDenegatException("Rol no vàlid");
         }
-        
-        //Validacio dates
+
+        // Validacio dates
         if (inici.isAfter(fi)) {
-            throw new ReservaDatesNoValidsException("La data d'inici abans que data final!!");
+            throw new ReservaDatesNoValidsException("La data d'inici és abans que data final!!");
         }
         if (inici.isBefore(LocalDate.now())) {
             throw new ReservaDatesNoValidsException("Reserva en el passat!!");
         }
 
         // Validació disponibilitat
-        List<Reserva> reserves = reservaRepo.findReservasSolapadas(matricula, inici, fi);
+        List<Reserva> reserves = reservaRepository.findReservasSolapadas(matricula, inici, fi);
         if (!reserves.isEmpty()) {
             throw new ReservaDatesNoValidsException("Vehicle no disponible en aquestes dates");
         }
 
         // client i vehicle
-        Client client = clientRepo.findById(emailClient).orElseThrow(() -> new DadesNoTrobadesException("Client no trobat"));
-        Vehicle vehicle = vehicleRepo.findById(matricula).orElseThrow(() -> new DadesNoTrobadesException("Vehicle no trobat"));
-        
+        Client client = clientRepository.findById(emailClient).orElseThrow(() -> new DadesNoTrobadesException("Client no trobat"));
+        Vehicle vehicle = vehicleRepository.findById(matricula).orElseThrow(() -> new DadesNoTrobadesException("Vehicle no trobat"));
+
         if (vehicle.getEstatVehicle().equals(EstatVehicle.BAIXA))
             throw new VehicleNoDisponibleException("El vehicle està fora de servei");
 
@@ -170,24 +93,24 @@ public class ReservaService {
         // calculem dies entre dates
         long dies = ChronoUnit.DAYS.between(inici, fi);
         // menys d'un dia és un dia sencer
-        dies = (dies == 0?1:dies);
-        
-        // el preu hora per 24 hores i pels dies de llogier
+        dies = (dies == 0 ? 1 : dies);
+
+        // el preu hora per 24 hores i pels dies de lloguer
         BigDecimal importTotal = vehicle.getPreuHora().multiply(new BigDecimal(24)).multiply(new BigDecimal(dies));
-        
+
         reserva.setImportTotal(importTotal);
         reserva.setFiancaPagada(vehicle.getFiancaEstandard());
+        reserva.setEstat(EstatReserva.ACTIVA);
 
-        return reservaRepo.save(reserva);
+        return reservaRepository.save(reserva);
     }
-
 
     @Transactional
     public CancelReservaResponse anularReserva(Long idReserva, String userName)
             throws ReservaNoTrobadaException, AccesDenegatException, ReservaNoCancelableException {
 
         // control de ROL
-        UserRole rol = userLogic.getRole(userName).orElseThrow();
+        UserRole rol = userLogic.getRole(userName).orElseThrow(() -> new AccesDenegatException("Usuari no trobat o sense rol"));
         if (rol != UserRole.CLIENT && rol != UserRole.AGENT && rol != UserRole.ADMIN) {
             throw new AccesDenegatException("Rol no vàlid");
         }
@@ -204,22 +127,18 @@ public class ReservaService {
 
         long daysAhead = ChronoUnit.DAYS.between(today, inici);
         BigDecimal refund = BigDecimal.ZERO;
-        
+
         if (daysAhead >= fullRefundDays) {
             BigDecimal importTotal = reserva.getImportTotal() != null ? reserva.getImportTotal() : BigDecimal.ZERO;
             BigDecimal fianca = reserva.getFiancaPagada() != null ? reserva.getFiancaPagada() : BigDecimal.ZERO;
             refund = importTotal.add(fianca);
         }
 
-        // ==========================================
         // RF55: CANVIEM L'ESTAT, NO L'ESBORREM
-        // ==========================================
         reserva.setEstat(EstatReserva.CANCELADA);
-        reservaRepo.save(reserva);
+        reservaRepository.save(reserva);
 
-        // ==========================================
         // SIMULACIÓ D'ENVIAMENT D'EMAIL
-        // ==========================================
         System.out.println("====== ENVIANT EMAIL AL CLIENT ======");
         System.out.println("Per a: " + reserva.getClient().getEmail());
         System.out.println("Assumpte: Confirmació d'anul·lació de reserva");
