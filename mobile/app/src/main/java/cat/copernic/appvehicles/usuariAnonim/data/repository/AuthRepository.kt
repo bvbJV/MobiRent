@@ -78,4 +78,47 @@ class AuthRepository(private val api: AuthApiService) {
             }
         }
     }
+    suspend fun login(email: String, contrasenya: String): Result<Boolean> {
+        return withContext(Dispatchers.IO) {
+            try {
+                // Preparamos el DTO para el backend
+                val request = LoginRequest(email, contrasenya)
+
+                // Llamamos a la API
+                val response = api.login(request)
+
+                if (response.isSuccessful) {
+                    val body = response.body()
+                    if (body != null) {
+                        // ¡ÉXITO! Guardamos la sesión en el DataStore local
+                        sessionManager.saveSession(
+                            email = body.email,
+                            name = body.nomComplet,
+                            token = body.token
+                        )
+                        Result.success(true)
+                    } else {
+                        Result.failure(Exception("Resposta buida del servidor"))
+                    }
+                } else {
+                    // Capturamos el error 401 u otros
+                    val errorBody = response.errorBody()?.string()
+                    val errorMessage = if (!errorBody.isNullOrEmpty()) {
+                        try {
+                            // Intentamos extraer el mensaje del JSON del backend
+                            JSONObject(errorBody).getString("error")
+                        } catch (e: Exception) {
+                            "Error en iniciar sessió"
+                        }
+                    } else {
+                        "Error en iniciar sessió: Codi ${response.code()}"
+                    }
+                    Result.failure(Exception(errorMessage))
+                }
+            } catch (e: Exception) {
+                // Errores de red, timeout, etc.
+                Result.failure(Exception("Error de connexió: ${e.message}"))
+            }
+        }
+    }
 }

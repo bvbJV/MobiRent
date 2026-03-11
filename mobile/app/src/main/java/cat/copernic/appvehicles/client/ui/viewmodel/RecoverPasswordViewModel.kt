@@ -136,4 +136,18 @@ class RecoverPasswordViewModel : ViewModel() {
                 }
         }
     }
-}
+    fun onSendClick() {
+        val trimmed = _uiState.value.email.trim()
+        if (trimmed.isBlank()) {
+            _uiState.update { it.copy(errorKey = "email_required", successKey = null) }
+            return
+        }
+        if (!Patterns.EMAIL_ADDRESS.matcher(trimmed).matches()) {
+            _uiState.update { it.copy(errorKey = "email_invalid", successKey = null) }
+            return
+        }
+
+        // Aquí debería llamarse a backend (RF03), pero tu proyecto no tiene endpoint.
+        // Dejamos mensaje neutro.
+        _uiState.update { it.copy(errorKey = null, successKey = "recover_sent") }
+}}
