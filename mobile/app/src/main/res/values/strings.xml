@@ -63,6 +63,7 @@
     <string name="status_finished">Finished</string>
     <string name="cancel_reservation">Cancel reservation</string>
     <string name="confirm_cancel_question">Are you sure you want to cancel this reservation?</string>
+    <string name="cannot_cancel_started_finished">Started or finished reservations cannot be cancelled.</string>
 
     <!-- Reservation creation -->
     <string name="create_reservation_title">New Reservation</string>
@@ -151,6 +152,13 @@
 
     <string name="pujar">Upload %1$s</string>
     <string name="foto_seleccionada">Photo selected</string>
+    <string name="email_body_greeting">Hello,</string>
+    <string name="email_body_cancelled_vehicle">Your reservation for vehicle %1$s has been successfully cancelled.</string>
+    <string name="email_body_refund">A refund of %1$s € has been issued.</string>
+    <string name="cancellation_notification_title">Cancellation Notification</string>
+    <string name="email_to">To: %1$s</string>
+    <string name="email_subject_cancellation">Subject: Reservation Cancellation Confirmation</string>
+
 
     <!-- Validation errors -->
     <string name="error_generic">Something went wrong</string>
@@ -185,4 +193,19 @@
     <string name="err_targeta_format">The card must have between 13 and 19 digits.</string>
     <string name="err_foto_llicencia">You must upload the license photo.</string>
     <string name="err_foto_identificacio">You must upload the identification photo.</string>
+
+    <string name="error_cancel_prefix">Error cancelling reservation</string>
+    <string name="error_generic_title">Something went wrong</string>
+    <string name="error_load_reservation_details">We couldn\'t load the reservation details. Please check your connection.</string>
+    <string name="error_load_reservations">We couldn\'t load the reservations.</string>
+    <string name="error_dates_required">Please select both start and end dates.</string>
+    <string name="error_invalid_date_range">Invalid date. The start date must be earlier than the end date.</string>
+
+    <string name="login_required_title">You need to log in</string>
+    <string name="login_required_desc">Log in from your profile to use this service.</string>
+    <string name="no_reservations_found">You currently have no reservations.</string>
+
+    <string name="close">Close</string>
+    <string name="sort_list">Sort list</string>
+
 </resources>
