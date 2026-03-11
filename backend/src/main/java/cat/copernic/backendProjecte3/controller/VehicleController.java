@@ -62,8 +62,7 @@ public class VehicleController {
         List<Vehicle> vehicles = vehicleService.cercarVehiclesDisponibles(
                 dataInici,
                 dataFi,
-                tipus,
-                codiPostal
+                tipus
         );
 
         List<VehicleResponseDTO> response = vehicles.stream()

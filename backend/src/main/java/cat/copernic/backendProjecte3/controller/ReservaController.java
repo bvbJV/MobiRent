@@ -57,11 +57,10 @@ public class ReservaController {
             throws ReservaDatesNoValidsException, VehicleNoDisponibleException, AccesDenegatException, DadesNoTrobadesException {
 
         Reserva r = reservaService.crearReserva(
-                req.getEmailClient(),
                 req.getMatricula(),
+                req.getEmailClient(),
                 req.getDataInici(),
-                req.getDataFi(),
-                req.getUserName()
+                req.getDataFi()
         );
 
         return ReservaResponse.fromEntity(r);
