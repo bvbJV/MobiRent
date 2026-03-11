@@ -46,4 +46,6 @@ public class ClientUpdateDTO {
 
     public String getImatgeCarnet() { return imatgeCarnet; }
     public void setImatgeCarnet(String imatgeCarnet) { this.imatgeCarnet = imatgeCarnet; }
+
+   
 }
