@@ -21,9 +21,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
-import java.util.Map;
 import tools.jackson.databind.ObjectMapper;
 
 /**
@@ -38,21 +35,43 @@ import tools.jackson.databind.ObjectMapper;
  * </ul>
  *
  * <p>Este controlador da cobertura principalmente a los requisitos RF01, RF02 y RF03.
+ *
+ * <p>Los endpoints definidos en esta clase permiten tanto el acceso inicial de
+ * usuarios al sistema como la gestión del ciclo de recuperación de credenciales
+ * cuando un usuario no puede iniciar sesión con normalidad.</p>
  */
 @RestController
 @RequestMapping("/api/auth")
 @CrossOrigin
 public class AuthController {
 
+    /**
+     * Servicio encargado de la lógica de negocio relacionada con clientes.
+     *
+     * <p>Se utiliza principalmente para registrar nuevos clientes.</p>
+     */
     @Autowired
     private ClientService clientService;
 
+    /**
+     * Componente de lógica de negocio para autenticación y recuperación de contraseña.
+     */
     @Autowired
     private UserLogic userLogic;
 
+    /**
+     * Repositorio de usuarios utilizado para recuperar la información persistida
+     * necesaria durante el proceso de login.
+     */
     @Autowired
     private UsuariRepository usuariRepository;
 
+    /**
+     * Utilidad para serialización y deserialización de objetos JSON.
+     *
+     * <p>Se mantiene inyectado en el controlador para posibles transformaciones
+     * de datos relacionadas con peticiones o respuestas JSON.</p>
+     */
     @Autowired
     private ObjectMapper objectMapper;
 
@@ -70,6 +89,17 @@ public class AuthController {
      */
     /**
      * Endpoint para registrar un cliente desde el móvil (recibe JSON con imágenes en Base64).
+     *
+     * <p>Recibe un {@link ClientRegistreDTO} con todos los datos necesarios para crear
+     * un nuevo cliente. Las imágenes asociadas al documento identificativo y al carnet
+     * de conducir viajan codificadas en Base64 dentro del propio JSON.</p>
+     *
+     * <p>Si el registro se realiza correctamente, devuelve el email del nuevo usuario
+     * junto con un mensaje de confirmación. Si se produce un conflicto en el alta,
+     * se responde con código HTTP 409.</p>
+     *
+     * @param registerDTO DTO con los datos de registro del cliente.
+     * @return respuesta HTTP con el resultado del proceso de alta.
      */
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> register(@RequestBody ClientRegistreDTO registerDTO) {
@@ -103,6 +133,9 @@ public class AuthController {
      * un correo con las instrucciones de recuperación. Si no existe, se responde
      * igualmente con éxito para no filtrar información del sistema.
      *
+     * <p>Este comportamiento evita revelar si un email está registrado o no,
+     * mejorando la seguridad del proceso de autenticación.</p>
+     *
      * @param request petición con el email del usuario.
      * @return respuesta estándar del proceso de recuperación.
      */
@@ -122,6 +155,10 @@ public class AuthController {
 
     /**
      * Restablece la contraseña de un usuario utilizando un token de recuperación.
+     *
+     * <p>El token recibido debe corresponder a un proceso válido de recuperación.
+     * Si el token es correcto y no ha caducado, se actualiza la contraseña del
+     * usuario con el nuevo valor indicado en la petición.</p>
      *
      * @param request petición con token y nueva contraseña.
      * @return respuesta estándar informando del resultado del cambio.
@@ -146,6 +183,9 @@ public class AuthController {
      * <p>Primero valida las credenciales mediante la lógica de negocio. Después,
      * recupera el usuario desde persistencia para construir el DTO de respuesta que
      * consumirá la aplicación móvil. Nunca devuelve la contraseña.
+     *
+     * <p>La respuesta incluye los datos básicos del usuario autenticado y un token
+     * identificativo de sesión generado para el cliente consumidor.</p>
      *
      * @param loginRequest credenciales de acceso.
      * @return respuesta HTTP 200 con los datos de sesión o el error correspondiente.
