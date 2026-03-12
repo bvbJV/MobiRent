@@ -42,7 +42,7 @@ fun VehicleDetailScreen(
     val color = "White"
     val limitKm = "300 km/day"
     val minDies = "1 day"
-    val maxDies = "15 days"
+    val maxDies = "30 days"
     val fianca = "500€"
 
     Scaffold(
