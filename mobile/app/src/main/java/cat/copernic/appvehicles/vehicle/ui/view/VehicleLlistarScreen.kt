@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DirectionsCar
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -25,7 +26,7 @@ import java.util.Calendar
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun VehicleLlistarScreen(
-    onVehicleClick: (String, String, String) -> Unit, // REBEM LES DATES PER NAVEGACIÓ
+    onVehicleClick: (String, String, String) -> Unit,
     viewModel: VehicleViewModel = viewModel()
 ) {
 
@@ -78,10 +79,11 @@ fun VehicleLlistarScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 16.dp),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
 
-                // FILTRO FECHAS CON CALENDARIO
+                // FILTRO FECHAS
                 Button(
                     modifier = Modifier.weight(1f),
                     onClick = {
@@ -96,15 +98,18 @@ fun VehicleLlistarScreen(
                                         fechaFin = "%04d-%02d-%02d".format(year2, month2 + 1, day2)
 
                                         if (fechaInicio.isNotBlank() && fechaFin.isNotBlank()) {
+
                                             val start = java.time.LocalDate.parse(fechaInicio)
                                             val end = java.time.LocalDate.parse(fechaFin)
 
-                                            // ELIMINAT EL LÍMIT FALS DE 2-15 DIES.
-                                            // Ara només comprovem que la data de fi no sigui abans de l'inici.
                                             val days = java.time.temporal.ChronoUnit.DAYS.between(start, end)
 
                                             if (days < 0) {
-                                                Toast.makeText(context, "La data final ha de ser posterior a la d'inici", Toast.LENGTH_LONG).show()
+                                                Toast.makeText(
+                                                    context,
+                                                    "La data final ha de ser posterior a la d'inici",
+                                                    Toast.LENGTH_LONG
+                                                ).show()
                                             } else {
                                                 viewModel.loadVehiclesDisponibles(fechaInicio, fechaFin)
                                             }
@@ -114,7 +119,6 @@ fun VehicleLlistarScreen(
                                     calendar.get(Calendar.MONTH),
                                     calendar.get(Calendar.DAY_OF_MONTH)
                                 ).show()
-
                             },
                             calendar.get(Calendar.YEAR),
                             calendar.get(Calendar.MONTH),
@@ -162,6 +166,26 @@ fun VehicleLlistarScreen(
                         )
                     }
                 }
+
+                // BOTÓ LIMPIAR FILTRE
+                IconButton(
+                    onClick = {
+                        fechaInicio = ""
+                        fechaFin = ""
+                        viewModel.loadVehicles()
+
+                        Toast.makeText(
+                            context,
+                            "Date filter cleared",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Clear,
+                        contentDescription = "Clear filter"
+                    )
+                }
             }
 
             if (vehiculosOrdenados.isEmpty()) {
@@ -176,11 +200,12 @@ fun VehicleLlistarScreen(
             } else {
 
                 LazyColumn {
+
                     items(vehiculosOrdenados) { vehicle ->
+
                         VehicleCard(
                             vehicle = vehicle,
                             onClick = {
-                                // ARA ENVIEM LES DATES CAP A LA PANTALLA DE DETALL/RESERVA!
                                 onVehicleClick(vehicle.id, fechaInicio, fechaFin)
                             }
                         )
@@ -210,6 +235,7 @@ fun VehicleCard(
             val fotoCocheBitmap = rememberBase64Bitmap(uriSimulada)
 
             if (fotoCocheBitmap != null) {
+
                 Image(
                     bitmap = fotoCocheBitmap,
                     contentDescription = "Foto de ${vehicle.marca} ${vehicle.model}",
@@ -218,17 +244,21 @@ fun VehicleCard(
                         .height(180.dp),
                     contentScale = ContentScale.Crop
                 )
+
             } else {
+
                 Surface(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(180.dp),
                     color = MaterialTheme.colorScheme.surfaceVariant
                 ) {
+
                     Box(
                         contentAlignment = Alignment.Center,
                         modifier = Modifier.fillMaxSize()
                     ) {
+
                         Icon(
                             imageVector = Icons.Default.DirectionsCar,
                             contentDescription = "Sense imatge",
@@ -242,18 +272,23 @@ fun VehicleCard(
             Column(
                 modifier = Modifier.padding(16.dp)
             ) {
+
                 Text(
                     text = "${vehicle.marca} ${vehicle.model}",
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = androidx.compose.ui.text.font.FontWeight.Bold
                 )
+
                 Spacer(modifier = Modifier.height(4.dp))
+
                 Text(
                     text = vehicle.variant,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
+
                 Spacer(modifier = Modifier.height(8.dp))
+
                 Text(
                     text = "${vehicle.preuHora} €/h",
                     style = MaterialTheme.typography.titleMedium,
