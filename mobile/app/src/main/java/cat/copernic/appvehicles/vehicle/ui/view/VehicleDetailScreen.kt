@@ -16,8 +16,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.ui.res.stringResource
 import cat.copernic.appvehicles.R
-import cat.copernic.appvehicles.ui.theme.AppVehiclesTheme
 import cat.copernic.appvehicles.vehicle.ui.viewmodel.VehicleViewModel
+import androidx.compose.foundation.Image
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.material.icons.filled.DirectionsCar
+import cat.copernic.appvehicles.core.composables.rememberBase64Bitmap
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -81,17 +85,42 @@ fun VehicleDetailScreen(
                     .padding(16.dp)
             ) {
 
-                Surface(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(220.dp),
-                    color = MaterialTheme.colorScheme.surfaceVariant,
-                    shape = MaterialTheme.shapes.medium
-                ) {
-                    Box(contentAlignment = Alignment.Center) {
-                        Text("Vehicle image")
+                // --- INICIO IMAGEN DEL VEHÍCULO ---
+                val base64String = vehicleReal.fotoBase64
+                val uriSimulada = base64String?.let { "data:image/jpeg;base64,$it" }
+                val fotoCocheBitmap = rememberBase64Bitmap(imageUri = uriSimulada)
+
+                if (fotoCocheBitmap != null) {
+                    // Si la foto llega bien, la ponemos en grande
+                    Image(
+                        bitmap = fotoCocheBitmap,
+                        contentDescription = "Foto de ${vehicleReal.marca} ${vehicleReal.model}",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(220.dp)
+                            .clip(MaterialTheme.shapes.medium),
+                        contentScale = ContentScale.Crop
+                    )
+                } else {
+                    // Si no tiene foto, dejamos el recuadro gris con un icono de coche
+                    Surface(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(220.dp),
+                        color = MaterialTheme.colorScheme.surfaceVariant,
+                        shape = MaterialTheme.shapes.medium
+                    ) {
+                        Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
+                            Icon(
+                                imageVector = Icons.Default.DirectionsCar,
+                                contentDescription = "Sense imatge",
+                                modifier = Modifier.size(80.dp),
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+                            )
+                        }
                     }
                 }
+                // --- FIN IMAGEN DEL VEHÍCULO ---
 
                 Spacer(modifier = Modifier.height(16.dp))
 
