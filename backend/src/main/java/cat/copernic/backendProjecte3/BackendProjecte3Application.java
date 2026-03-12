@@ -11,8 +11,13 @@ import cat.copernic.backendProjecte3.enums.UserRole;
 import cat.copernic.backendProjecte3.repository.ClientRepository;
 import cat.copernic.backendProjecte3.repository.ReservaRepository;
 import cat.copernic.backendProjecte3.repository.VehicleRepository;
+
+import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.file.Files;
 import java.time.LocalDate;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -36,79 +41,85 @@ public class BackendProjecte3Application implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        System.out.println("Inserint dades de prova...");
+        System.out.println("Inserint dades de prova per a la DEMO...");
 
         try {
             reservaRepo.deleteAll();
             vehicleRepo.deleteAll();
 
-            Client clientVip = crearClientExemple();
-
-            Vehicle cotxeElectring = crearVehicleExemple(
-                    "1111AAA",
-                    "Tesla",
-                    "Model 3",
-                    "Elèctric",
-                    "25.00",
-                    "400.00",
-                    1,
-                    30
+            Client client1 = crearClientExemple(
+                    "maria@test.com", "Maria Garcia", "44556677D",
+                    "src/main/resources/demo-imatges/maria_perfil.jpg",
+                    "src/main/resources/demo-imatges/maria_dni.jpg",
+                    "src/main/resources/demo-imatges/maria_carnet.jpg"
+            );
+            Client client2 = crearClientExemple(
+                    "joan@test.com", "Joan Piñol", "11223344X",
+                    "joan_perfil.jpg", "joan_dni.jpg", "joan_carnet.jpg"
+            );
+            Client client3 = crearClientExemple(
+                    "laura@test.com", "Laura Vila", "99887766Z",
+                    "laura_perfil.jpg", "laura_dni.jpg", "laura_carnet.jpg"
             );
 
-            Vehicle cotxeHibrid = crearVehicleExemple(
-                    "2222BBB",
-                    "Toyota",
-                    "Corolla",
-                    "Híbrid",
-                    "15.00",
-                    "200.00",
-                    1,
-                    20
-            );
+            Vehicle tesla = crearVehicleExemple("1111AAA", "Tesla", "Model 3", "Elèctric", "25.00", "400.00", "src/main/resources/demo-imatges/Tesla_Model_3.png");
+            Vehicle toyota = crearVehicleExemple("2222BBB", "Toyota", "Corolla", "Híbrid", "15.00", "200.00", "src/main/resources/demo-imatges/Toyota_Corolla.jpg");
+            Vehicle seat = crearVehicleExemple("3333CCC", "Seat", "Ibiza", "Combustió", "10.00", "150.00", "src/main/resources/demo-imatges/Seat_Ibiza.jpg");
 
-            Vehicle cotxeCombustio = crearVehicleExemple(
-                    "3333CCC",
-                    "Seat",
-                    "Ibiza",
-                    "Combustió",
-                    "10.00",
-                    "150.00",
-                    1,
-                    15
-            );
+            crearReservaExemple(client1, tesla, 1, 3, "150.00", "400.00");
+            crearReservaExemple(client2, tesla, 10, 2, "100.00", "400.00");
 
-            crearReservaExemple(clientVip, cotxeElectring);
+            crearReservaExemple(client3, toyota, 5, 4, "120.00", "200.00");
+            crearReservaExemple(client1, toyota, 15, 1, "30.00", "200.00");
 
-            System.out.println("Dades inserides correctament.");
+            crearReservaExemple(client2, seat, 2, 5, "100.00", "150.00");
+            crearReservaExemple(client3, seat, 20, 2, "40.00", "150.00");
+
+            System.out.println("Dades inserides correctament! La Demo està a punt.");
         } catch (Exception e) {
             System.err.println("ERROR inserint dades de prova: " + e.getMessage());
         }
     }
 
-    private Client crearClientExemple() {
-        return clientRepo.findById("maria@test.com").orElseGet(() -> {
-            Client c = new Client();
-            c.setEmail("maria@test.com");
-            c.setPassword(PasswordHasher.encode("123456"));
-            c.setNomComplet("Maria Garcia");
-            c.setDni("44556677D");
-            c.setReputacio(Reputacio.PREMIUM);
-            c.setRol(UserRole.CLIENT);
-            return clientRepo.save(c);
-        });
+    private byte[] llegirImatge(String rutaArxiu) {
+        if (rutaArxiu == null || rutaArxiu.isEmpty()) {
+            return null;
+        }
+        try {
+            File arxiu = new File(rutaArxiu);
+            if (arxiu.exists()) {
+                return Files.readAllBytes(arxiu.toPath());
+            } else {
+                System.out.println("AVÍS: No s'ha trobat la imatge " + rutaArxiu + " - Guardant null.");
+                return null;
+            }
+        } catch (IOException e) {
+            System.err.println("Error llegint la imatge " + rutaArxiu + ": " + e.getMessage());
+            return null;
+        }
     }
 
-    private Vehicle crearVehicleExemple(
-            String matricula,
-            String marca,
-            String model,
-            String variant,
-            String preu,
-            String fianca,
-            int minDies,
-            int maxDies
-    ) {
+    private Client crearClientExemple(String email, String nom, String dni, String imgPerfil, String imgDni, String imgCarnet) {
+        Client c = clientRepo.findById(email).orElse(new Client());
 
+        c.setEmail(email);
+
+        if (c.getPassword() == null) {
+            c.setPassword(PasswordHasher.encode("123456"));
+        }
+
+        c.setNomComplet(nom);
+        c.setDni(dni);
+        c.setReputacio(Reputacio.PREMIUM);
+        c.setRol(UserRole.CLIENT);
+
+        c.setImatgeDni(llegirImatge(imgDni));
+        c.setImatgeCarnet(llegirImatge(imgCarnet));
+
+        return clientRepo.save(c);
+    }
+
+    private Vehicle crearVehicleExemple(String matricula, String marca, String model, String variant, String preu, String fianca, String rutaImatge) {
         Vehicle v = new Vehicle();
         v.setMatricula(matricula);
         v.setMarca(marca);
@@ -116,28 +127,31 @@ public class BackendProjecte3Application implements CommandLineRunner {
         v.setTipusVehicle(TipusVehicle.COTXE);
         v.setVariant(variant);
         v.setEstatVehicle(EstatVehicle.ALTA);
-
         v.setPreuHora(new BigDecimal(preu));
         v.setFiancaEstandard(new BigDecimal(fianca));
 
-        v.setMinDiesLloguer(minDies);
-        v.setMaxDiesLloguer(maxDies);
+        // NUEVO: mínimo y máximo de días de alquiler
+        v.setMinDiesLloguer(1);
+        v.setMaxDiesLloguer(30);
+
+        // foto del vehículo
+        v.setFotoBinario(llegirImatge(rutaImatge));
 
         return vehicleRepo.save(v);
     }
 
-    private void crearReservaExemple(Client c, Vehicle v) {
+    private void crearReservaExemple(Client c, Vehicle v, int offsetDiesInici, int duradaDies, String importTotal, String fianca) {
         Reserva r = new Reserva();
-
         r.setClient(c);
         r.setVehicle(v);
 
-        r.setDataInici(LocalDate.now().plusWeeks(1));
-        r.setDataFi(LocalDate.now().plusWeeks(1).plusDays(3));
+        LocalDate dataInici = LocalDate.now().plusDays(offsetDiesInici);
+        LocalDate dataFi = dataInici.plusDays(duradaDies);
 
-        r.setImportTotal(new BigDecimal("150.00"));
-        r.setFiancaPagada(new BigDecimal("300.00"));
-
+        r.setDataInici(dataInici);
+        r.setDataFi(dataFi);
+        r.setImportTotal(new BigDecimal(importTotal));
+        r.setFiancaPagada(new BigDecimal(fianca));
         reservaRepo.save(r);
     }
 }
