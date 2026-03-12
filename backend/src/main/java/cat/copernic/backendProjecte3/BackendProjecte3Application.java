@@ -58,7 +58,7 @@ public class BackendProjecte3Application implements CommandLineRunner {
                     "joan_perfil.jpg", "joan_dni.jpg", "joan_carnet.jpg"
             );
             Client client3 = crearClientExemple(
-                    "laura@test.com", "Laura Vila", "99887766Z",
+                    "laura@test.com", "Laura Vila", "94887766Z",
                     "laura_perfil.jpg", "laura_dni.jpg", "laura_carnet.jpg"
             );
 
