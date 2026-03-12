@@ -14,13 +14,17 @@ import java.time.LocalDate;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
  *
  * @author manel
  */
 @Service
 public class VehicleService {
+    
+    private static final Logger logger = LoggerFactory.getLogger(VehicleService.class);
+
 
     private final VehicleRepository vehicleRepository;
 

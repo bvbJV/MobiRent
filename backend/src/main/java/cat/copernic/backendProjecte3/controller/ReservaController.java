@@ -11,11 +11,15 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import cat.copernic.backendProjecte3.dto.ReservaResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("/api/reserves")
 @CrossOrigin(origins = "*")
 public class ReservaController {
+    
+    private static final Logger logger = LoggerFactory.getLogger(ReservaController.class);
 
     @Autowired
     private ReservaService reservaService;
