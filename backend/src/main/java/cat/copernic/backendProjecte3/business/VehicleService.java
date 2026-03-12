@@ -14,68 +14,72 @@ import java.time.LocalDate;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
+ * Servei de negoci encarregat de gestionar les operacions relacionades amb els
+ * vehicles dins del sistema.
+ *
+ * Aquesta classe actua com a capa intermèdia entre el controlador
+ * (VehicleController) i el repositori (VehicleRepository).
+ *
+ * Permet obtenir tots els vehicles del sistema i cercar vehicles disponibles en
+ * funció d'un rang de dates i opcionalment pel tipus de vehicle.
  *
  * @author manel
  */
 @Service
 public class VehicleService {
 
-    @Autowired
-    private VehicleRepository vehicleRepo;
+    private static final Logger logger = LoggerFactory.getLogger(VehicleService.class);
 
-    @Autowired
-    private ReservaRepository reservaRepo;
+    private final VehicleRepository vehicleRepository;
 
-    
-    
-    
+    /**
+     * Constructor del servei de vehicles.
+     *
+     * @param vehicleRepository repositori encarregat de gestionar l'accés a la
+     * base de dades dels vehicles
+     */
+    public VehicleService(VehicleRepository vehicleRepository) {
+        this.vehicleRepository = vehicleRepository;
+    }
+
+    /**
+     * Obté tots els vehicles registrats a la base de dades.
+     *
+     * @return llista de tots els vehicles disponibles al sistema
+     */
     public List<Vehicle> obtenirTots() {
-        return vehicleRepo.findAll();
+        return vehicleRepository.findAll();
     }
 
-    public Vehicle obtenirPerId(String matricula) {
-        return vehicleRepo.findById(matricula)
-                .orElseThrow(() -> new RuntimeException("Vehicle no trobat: " + matricula));
-    }
+    /**
+     * Cerca vehicles disponibles dins d'un rang de dates determinat.
+     *
+     * Aquesta funció calcula el nombre de dies entre les dues dates i aplica la
+     * política de negoci del sistema: el lloguer mínim és d'almenys 1 dia.
+     *
+     * Posteriorment delega la consulta al repositori per obtenir els vehicles
+     * que compleixen les condicions de disponibilitat.
+     *
+     * @param inici data d'inici del lloguer
+     * @param fi data de finalització del lloguer
+     * @param tipus tipus de vehicle (opcional)
+     *
+     * @return llista de vehicles disponibles per al període indicat
+     */
+    public List<Vehicle> cercarVehiclesDisponibles(LocalDate inici, LocalDate fi, TipusVehicle tipus) {
 
-    @Transactional
-    public Vehicle guardarVehicle(Vehicle vehicle) {
-        return vehicleRepo.save(vehicle);
-    }
+        long dies = java.time.temporal.ChronoUnit.DAYS.between(inici, fi);
 
-    @Transactional
-    public void eliminarVehicle(String matricula) {
-        vehicleRepo.deleteById(matricula);
-    }
-    
-    public List<Vehicle> cercarVehiclesDisponibles(LocalDate inici, LocalDate fi, TipusVehicle tipus, String codiPostal) {
-        // Assumeix una @Query al repositori que filtra per dates i lloc
-        return vehicleRepo.findDisponibles(inici, fi, tipus, codiPostal);
-    }
-
-
-    @Transactional
-    public void donarDeBaixaVehicle(String matricula) {
-        Vehicle v = obtenirPerId(matricula);
-
-        // Validació de negoci: No es pot donar de baixa si té reserves futures
-        boolean teReservesFutures = reservaRepo.existsByVehicleAndDataFiAfter(v, LocalDate.now());
-        if (teReservesFutures) {
-            throw new IllegalStateException("El vehicle té reserves compromeses i no es pot desactivar.");
+        // Política de negocio: mínimo 1 día
+        if (dies <= 0) {
+            dies = 1;
         }
 
-        v.setEstatVehicle(EstatVehicle.BAIXA);
-        vehicleRepo.save(v);
-    }
-
-
-    @Transactional
-    public void donarDeAltaVehicle(String matricula, String motiuManteniment) {
-        Vehicle v = obtenirPerId(matricula);
-        
-        v.setEstatVehicle(EstatVehicle.ALTA);
-        vehicleRepo.save(v);
+        // Llamamos al repo pasándole los días calculados para que filtre bien
+        return vehicleRepository.findDisponibles(inici, fi, tipus, dies);
     }
 }

@@ -14,31 +14,36 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 /**
+ * Repositori encarregat de gestionar l'accés a la base de dades per a l'entitat
+ * {@link Vehicle}.
+ *
+ * Aquesta interfície utilitza Spring Data JPA i permet realitzar operacions
+ * CRUD automàtiques sobre la taula de vehicles.
+ *
+ * També inclou una consulta personalitzada per obtenir vehicles disponibles
+ * dins d'un rang de dates determinat.
  *
  * @author manel
  */
 @Repository
 public interface VehicleRepository extends JpaRepository<Vehicle, String> {
-    
-    /**
-     * Cerca vehicles que compleixin:
-     * El tipus demanat.
-     * Estat 'ALTA'.
-     * NO tinguin cap reserva que es solapi amb les dates d'inici i fi.
-     */
-    @Query("SELECT v FROM Vehicle v WHERE " +
-           "v.tipusVehicle = :tipus " +
-           "AND v.estatVehicle = 'ALTA' " +
-           "AND NOT EXISTS (" +
-           "   SELECT r FROM Reserva r " +
-           "   WHERE r.vehicle = v " +
-           "   AND r.dataInici <= :fi " +    
-           "   AND r.dataFi >= :inici" +
-           ")")
+
+    @Query("""
+    SELECT v FROM Vehicle v
+    WHERE (:tipus IS NULL OR v.tipusVehicle = :tipus)
+    AND (:dies BETWEEN v.minDiesLloguer AND v.maxDiesLloguer)
+    AND NOT EXISTS (
+        SELECT r FROM Reserva r
+        WHERE r.vehicle = v
+        AND r.estat = 'ACTIVA'
+        AND r.dataInici <= :fi
+        AND r.dataFi >= :inici
+    )
+""")
     List<Vehicle> findDisponibles(
             @Param("inici") LocalDate inici,
             @Param("fi") LocalDate fi,
             @Param("tipus") TipusVehicle tipus,
-            @Param("codiPostal") String codiPostal
+            @Param("dies") long dies
     );
 }

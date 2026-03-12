@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
- */
 package cat.copernic.backendProjecte3.entities;
 
 import cat.copernic.backendProjecte3.enums.EstatVehicle;
@@ -12,6 +8,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Entitat que representa un vehicle dins del sistema.
+ *
+ * Aquesta classe està mapejada a la taula "vehicle" de la base de dades
+ * mitjançant JPA/Hibernate.
+ *
+ * Conté tota la informació relacionada amb un vehicle disponible per al
+ * lloguer, incloent dades tècniques, econòmiques i informació sobre la seva
+ * disponibilitat.
+ *
+ * També manté la relació amb les reserves associades.
+ */
 @Entity
 @Table(name = "vehicle")
 public class Vehicle {
@@ -20,18 +28,24 @@ public class Vehicle {
     @Column(length = 20)
     private String matricula;
 
-    @Enumerated(EnumType.STRING)
-    private TipusVehicle tipusVehicle;
-    
-    @Enumerated(EnumType.STRING)
-    private EstatVehicle estatVehicle;
+    @Column(nullable = false)
+    private String marca;
 
-    private String motor;
+    @Column(nullable = false)
+    private String model;
+
+    @Column(nullable = false)
+    private String variant;
+
+    // --- CAMPOS MODIFICADOS PARA IMAGEN BLOB ---
+    @Lob
+    @Column(columnDefinition = "LONGBLOB")
+    private byte[] fotoBinario;  // NUEVO: Almacena la imagen como BLOB
+
+    private String fotoUrl;  // Lo mantenemos por compatibilidad
 
     private String potencia;
-
     private String color;
-
     private Integer limitQuilometratge;
 
     @Column(precision = 10, scale = 2)
@@ -41,8 +55,13 @@ public class Vehicle {
     private BigDecimal fiancaEstandard;
 
     private Integer minDiesLloguer;
-
     private Integer maxDiesLloguer;
+
+    @Enumerated(EnumType.STRING)
+    private TipusVehicle tipusVehicle;
+
+    @Enumerated(EnumType.STRING)
+    private EstatVehicle estatVehicle;
 
     @Column(columnDefinition = "TEXT")
     private String comentarisPrivats;
@@ -52,8 +71,10 @@ public class Vehicle {
     @OneToMany(mappedBy = "vehicle")
     private List<Reserva> reservas = new ArrayList<>();
 
-    public Vehicle() {}
+    public Vehicle() {
+    }
 
+    // GETTERS Y SETTERS
     public String getMatricula() {
         return matricula;
     }
@@ -62,20 +83,45 @@ public class Vehicle {
         this.matricula = matricula;
     }
 
-    public TipusVehicle getTipusVehicle() {
-        return tipusVehicle;
+    public String getMarca() {
+        return marca;
     }
 
-    public void setTipusVehicle(TipusVehicle tipusVehicle) {
-        this.tipusVehicle = tipusVehicle;
+    public void setMarca(String marca) {
+        this.marca = marca;
     }
 
-    public String getMotor() {
-        return motor;
+    public String getModel() {
+        return model;
     }
 
-    public void setMotor(String motor) {
-        this.motor = motor;
+    public void setModel(String model) {
+        this.model = model;
+    }
+
+    public String getVariant() {
+        return variant;
+    }
+
+    public void setVariant(String variant) {
+        this.variant = variant;
+    }
+
+    // NUEVOS GETTERS Y SETTERS PARA fotoBinario
+    public byte[] getFotoBinario() {
+        return fotoBinario;
+    }
+
+    public void setFotoBinario(byte[] fotoBinario) {
+        this.fotoBinario = fotoBinario;
+    }
+
+    public String getFotoUrl() {
+        return fotoUrl;
+    }
+
+    public void setFotoUrl(String fotoUrl) {
+        this.fotoUrl = fotoUrl;
     }
 
     public String getPotencia() {
@@ -134,6 +180,22 @@ public class Vehicle {
         this.maxDiesLloguer = maxDiesLloguer;
     }
 
+    public TipusVehicle getTipusVehicle() {
+        return tipusVehicle;
+    }
+
+    public void setTipusVehicle(TipusVehicle tipusVehicle) {
+        this.tipusVehicle = tipusVehicle;
+    }
+
+    public EstatVehicle getEstatVehicle() {
+        return estatVehicle;
+    }
+
+    public void setEstatVehicle(EstatVehicle estatVehicle) {
+        this.estatVehicle = estatVehicle;
+    }
+
     public String getComentarisPrivats() {
         return comentarisPrivats;
     }
@@ -158,19 +220,9 @@ public class Vehicle {
         this.reservas = reservas;
     }
 
-    public EstatVehicle getEstatVehicle() {
-        return estatVehicle;
-    }
-
-    public void setEstatVehicle(EstatVehicle estatVehicle) {
-        this.estatVehicle = estatVehicle;
-    }
-
     @Override
     public int hashCode() {
-        int hash = 5;
-        hash = 83 * hash + Objects.hashCode(this.matricula);
-        return hash;
+        return Objects.hashCode(this.matricula);
     }
 
     @Override
@@ -178,37 +230,22 @@ public class Vehicle {
         if (this == obj) {
             return true;
         }
-        if (obj == null) {
+        if (!(obj instanceof Vehicle)) {
             return false;
         }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Vehicle other = (Vehicle) obj;
+        Vehicle other = (Vehicle) obj;
         return Objects.equals(this.matricula, other.matricula);
     }
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Vehicle{");
-        sb.append("matricula=").append(matricula);
-        sb.append(", tipusVehicle=").append(tipusVehicle);
-        sb.append(", motor=").append(motor);
-        sb.append(", potencia=").append(potencia);
-        sb.append(", color=").append(color);
-        sb.append(", limitQuilometratge=").append(limitQuilometratge);
-        sb.append(", preuHora=").append(preuHora);
-        sb.append(", fiancaEstandard=").append(fiancaEstandard);
-        sb.append(", minDiesLloguer=").append(minDiesLloguer);
-        sb.append(", maxDiesLloguer=").append(maxDiesLloguer);
-        sb.append(", comentarisPrivats=").append(comentarisPrivats);
-        sb.append(", rutaDocumentacioPrivada=").append(rutaDocumentacioPrivada);
-        sb.append(", num reservas=").append(reservas.size());
-        sb.append('}');
-        return sb.toString();
+        return "Vehicle{"
+                + "matricula=" + matricula
+                + ", marca=" + marca
+                + ", model=" + model
+                + ", variant=" + variant
+                + ", preuHora=" + preuHora
+                + '}';
     }
-    
-    
-   
+
 }

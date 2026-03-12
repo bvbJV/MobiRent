@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package cat.copernic.backendProjecte3;
 
 import cat.copernic.backendProjecte3.config.PasswordHasher;
@@ -11,6 +7,7 @@ import cat.copernic.backendProjecte3.enums.UserRole;
 import cat.copernic.backendProjecte3.exceptions.ErrorAltaException;
 import cat.copernic.backendProjecte3.repository.ClientRepository;
 import cat.copernic.backendProjecte3.business.ClientService;
+import cat.copernic.backendProjecte3.dto.ClientRegistreDTO;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -45,55 +42,55 @@ public class ClientTest {
 
     @Test
     public void testRegistrarNouClient_FluxCorrecte() {
-        
-        // Alta client
-        Client client = new Client();
-        client.setEmail("nou.client@test.com"); 
-        client.setDni("12345678Z");
-        client.setAdreca("Carrer de l'Exemple, 123"); // Sense relació amb Localització
-        client.setCarnetConduir("B");
-        client.setNumeroTargetaCredit("1111-2222-3333-4444");
-        client.setReputacio(Reputacio.NORMAL);
-        client.setRol(UserRole.CLIENT);
 
-        String passwordEnClar = "secret123";
-        assertDoesNotThrow(() -> {
-             Client resultat = clientService.registrarNouClient(client, passwordEnClar);
-             assertNotNull(resultat);
-        });
-        
+        ClientRegistreDTO dto = new ClientRegistreDTO();
+        dto.setEmail("nou.client@test.com");
+        dto.setPassword("secret123");
+        dto.setNomComplet("Client de Prova");
+        dto.setDni("12345678Z");
+        dto.setAdreca("Carrer de l'Exemple, 123");
+        dto.setTipusCarnetConduir("B");
+        dto.setNumeroTargetaCredit("1111-2222-3333-4444");
+
+        // AQUÍ HEMOS QUITADO LOS "null, null"
+        Client resultat = assertDoesNotThrow(() ->
+                clientService.registrarNouClient(dto)
+        );
+
+        assertNotNull(resultat);
+
         Client clientDesat = clientRepo.findById("nou.client@test.com").orElse(null);
-        
-        //verificacions
+
+        // Verificaciones
         assertNotNull(clientDesat);
-        assertEquals("nou.client@test.com", clientDesat.getUsername());
-        assertTrue(PasswordHasher.check("secret123", clientDesat.getPassword())); //password ha d'estar xifrat
+        assertEquals("nou.client@test.com", clientDesat.getEmail());
+        assertTrue(PasswordHasher.check("secret123", clientDesat.getPassword()));
         assertEquals("12345678Z", clientDesat.getDni());
         assertEquals("Carrer de l'Exemple, 123", clientDesat.getAdreca());
-        assertEquals(Reputacio.NORMAL, clientDesat.getReputacio());
+        assertEquals(UserRole.CLIENT, clientDesat.getRol());
     }
 
-    /**
-     * Validació del Registre: Control de Duplicats
-     */
     @Test
-    public void testRegistrarClient_EmailDuplicat() {
-        
-        Client existent = new Client();
-        existent.setEmail("ja.existeix@test.com");
-        existent.setDni("99999999X");
-        existent.setPassword(PasswordHasher.encode("1234"));
-        existent.setRol(UserRole.CLIENT);
-        clientRepo.save(existent);
+    public void testRegistrarClient_EmailDuplicat() throws ErrorAltaException {
 
-        
-        Client nouIntent = new Client();
-        nouIntent.setEmail("ja.existeix@test.com"); // Email conflictiu
-        nouIntent.setDni("88888888Y"); // DNI diferent
+        ClientRegistreDTO primer = new ClientRegistreDTO();
+        primer.setEmail("ja.existeix@test.com");
+        primer.setPassword("1234");
+        primer.setNomComplet("Client Existent");
+        primer.setDni("99999999X");
 
-        
-        assertThrows(ErrorAltaException.class, () -> {
-            clientService.registrarNouClient(nouIntent, "novaPass");
-        });
+        // AQUÍ TAMBIÉN QUITAMOS LOS "null, null"
+        clientService.registrarNouClient(primer);
+
+        ClientRegistreDTO duplicat = new ClientRegistreDTO();
+        duplicat.setEmail("ja.existeix@test.com"); // mismo email
+        duplicat.setPassword("novaPass");
+        duplicat.setNomComplet("Client Nou");
+        duplicat.setDni("88888888Y"); // DNI diferente
+
+        // Y AQUÍ TAMBIÉN QUITAMOS LOS "null, null"
+        assertThrows(ErrorAltaException.class, () ->
+                clientService.registrarNouClient(duplicat)
+        );
     }
 }

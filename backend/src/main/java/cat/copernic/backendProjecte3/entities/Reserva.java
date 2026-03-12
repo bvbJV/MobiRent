@@ -4,11 +4,21 @@
  */
 package cat.copernic.backendProjecte3.entities;
 
+import cat.copernic.backendProjecte3.enums.EstatReserva;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Objects;
 
+/**
+ * Entitat que representa una reserva dins del sistema.
+ *
+ * Aquesta classe està mapejada a la taula "reserva" de la base de dades
+ * mitjançant JPA.
+ *
+ * Conté la informació relacionada amb una reserva realitzada per un client
+ * sobre un vehicle, incloent dates, import econòmic i estat de la reserva.
+ */
 @Entity
 @Table(name = "reserva")
 public class Reserva {
@@ -18,7 +28,6 @@ public class Reserva {
     private Long idReserva;
 
     // --- Fechas ---
-
     @Column(nullable = false)
     private LocalDate dataInici;
 
@@ -26,7 +35,6 @@ public class Reserva {
     private LocalDate dataFi;
 
     // --- Datos Económicos ---
-
     @Column(precision = 10, scale = 2)
     private BigDecimal importTotal;
 
@@ -34,22 +42,33 @@ public class Reserva {
     private BigDecimal fiancaPagada;
 
     // --- Relaciones ---
-
     @ManyToOne
     @JoinColumn(
-        name = "client_email", 
-        nullable = false
+            name = "client_email",
+            nullable = false
     )
     private Client client;
 
     @ManyToOne
     @JoinColumn(
-        name = "vehicle_matricula", 
-        nullable = false
+            name = "vehicle_matricula",
+            nullable = false
     )
     private Vehicle vehicle;
 
-    public Reserva() {}
+    public Reserva() {
+    }
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private EstatReserva estat = EstatReserva.ACTIVA; // Per defecte és activa
+
+    public EstatReserva getEstat() {
+        return estat;
+    }
+
+    public void setEstat(EstatReserva estat) {
+        this.estat = estat;
+    }
 
     public Long getIdReserva() {
         return idReserva;
