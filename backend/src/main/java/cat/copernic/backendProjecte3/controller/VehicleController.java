@@ -14,10 +14,15 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @RestController
 @RequestMapping("/api/vehicles")
 @CrossOrigin
 public class VehicleController {
+    
+    private static final Logger logger = LoggerFactory.getLogger(VehicleController.class);
 
     private final VehicleService vehicleService;
 
