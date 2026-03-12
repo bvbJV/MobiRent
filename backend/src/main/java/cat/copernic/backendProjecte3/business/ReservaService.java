@@ -19,9 +19,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service
 public class ReservaService {
+    
+    private static final Logger logger = LoggerFactory.getLogger(ReservaService.class);
 
     private final ReservaRepository reservaRepository;
     private final VehicleRepository vehicleRepository;
