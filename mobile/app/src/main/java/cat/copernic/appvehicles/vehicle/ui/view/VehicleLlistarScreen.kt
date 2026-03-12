@@ -71,7 +71,7 @@ fun VehicleLlistarScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "MobileCat",
+                        text = "MobiRent",
                         fontWeight = FontWeight.ExtraBold
                     )
                 },
@@ -205,22 +205,21 @@ fun VehicleLlistarScreen(
                 }
 
                 // ORDENAR POR PRECIO
+                // ORDENAR POR PRECIO
                 ExposedDropdownMenuBox(
                     expanded = expandedPrice,
                     onExpandedChange = { expandedPrice = !expandedPrice },
                     modifier = Modifier.weight(1f)
                 ) {
                     OutlinedTextField(
-                        value = if (ordenAscendente) stringResource(R.string.lowest_price) else stringResource(
-                            R.string.highest_price
-                        ),
+                        value = if (ordenAscendente) stringResource(R.string.lowest_price) else stringResource(R.string.highest_price),
                         onValueChange = {},
                         readOnly = true,
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expandedPrice) },
                         modifier = Modifier
                             .menuAnchor()
                             .fillMaxWidth()
-                            .height(56.dp), // Misma altura que el botón de fechas
+                            .height(56.dp),
                         textStyle = MaterialTheme.typography.bodyMedium
                     )
 
@@ -229,14 +228,16 @@ fun VehicleLlistarScreen(
                         onDismissRequest = { expandedPrice = false }
                     ) {
                         DropdownMenuItem(
-                            text = { Text("Lowest Price") },
+                            // ¡AQUÍ ESTÁ EL CAMBIO!
+                            text = { Text(stringResource(R.string.lowest_price)) },
                             onClick = {
                                 ordenAscendente = true
                                 expandedPrice = false
                             }
                         )
                         DropdownMenuItem(
-                            text = { Text("Highest Price") },
+                            // ¡AQUÍ ESTÁ EL CAMBIO!
+                            text = { Text(stringResource(R.string.highest_price)) },
                             onClick = {
                                 ordenAscendente = false
                                 expandedPrice = false
@@ -262,14 +263,14 @@ fun VehicleLlistarScreen(
                             tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
                         )
                         Spacer(modifier = Modifier.height(16.dp))
+                        // ¡CAMBIO AQUÍ! (Crea la string no_vehicles_available en tu XML)
                         Text(
-                            text = "No vehicles available for these dates",
+                            text = "No vehicles available for these dates", // <-- Cámbialo por stringResource(R.string.no_vehicles) si lo tienes
                             style = MaterialTheme.typography.bodyLarge,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 }
-
             } else {
                 LazyColumn(
                     contentPadding = PaddingValues(bottom = 16.dp)
