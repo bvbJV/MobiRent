@@ -54,8 +54,8 @@ public class BackendProjecte3Application implements CommandLineRunner {
                     "src/main/resources/demo-imatges/FotodePerfil1.png",
                     "src/main/resources/demo-imatges/maria_dni.jpg",
                     "src/main/resources/demo-imatges/maria_carnet.jpg",
-                    LocalDate.of(2030, 5, 15), "Espanyola", "Carrer Major, 15, Terrassa", "666555444", 
-                    "B", LocalDate.of(2032, 8, 20), "1111-2222-3333-4444"
+                    LocalDate.of(2030, 5, 15), "España", "Carrer Major, 15, Terrassa", "666555444", 
+                    "B", LocalDate.of(2032, 8, 20), "1111-2222-3333-44445"
             );
 
             Client client2 = crearClientExemple(
@@ -63,8 +63,8 @@ public class BackendProjecte3Application implements CommandLineRunner {
                     "src/main/resources/demo-imatges/FotodePerfil2.png",
                     "src/main/resources/demo-imatges/maria_dni.jpg", // Reutilitzem imatges per la demo
                     "src/main/resources/demo-imatges/maria_carnet.jpg",
-                    LocalDate.of(2028, 11, 30), "Andorrana", "Avinguda Meritxell, 10, Andorra", "777888999", 
-                    "A2", LocalDate.of(2029, 1, 10), "5555-6666-7777-8888"
+                    LocalDate.of(2028, 11, 30), "Andorra", "Avinguda Meritxell, 10, Andorra", "777888999", 
+                    "A2", LocalDate.of(2029, 1, 10), "5555-6666-7777-88889"
             );
 
             Client client3 = crearClientExemple(
@@ -72,8 +72,8 @@ public class BackendProjecte3Application implements CommandLineRunner {
                     "src/main/resources/demo-imatges/FotoDePerfil3.png",
                     "src/main/resources/demo-imatges/maria_dni.jpg",
                     "src/main/resources/demo-imatges/maria_carnet.jpg",
-                    LocalDate.of(2035, 2, 28), "Francesa", "Rue de la Paix, 5, Paris", "600111222", 
-                    "B1", LocalDate.of(2034, 12, 1), "9999-0000-1111-2222"
+                    LocalDate.of(2035, 2, 28), "Francia", "Rue de la Paix, 5, Paris", "600111222", 
+                    "B1", LocalDate.of(2034, 12, 1), "9999-0000-1111-22227"
             );
 
             // 2. Creació de VEHICLES (amb dades tècniques completes)

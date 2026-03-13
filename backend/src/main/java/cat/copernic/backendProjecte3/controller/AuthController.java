@@ -192,6 +192,7 @@ public class AuthController {
      */
     @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+       System.out.println("BACKEND RECIBE -> Email: [" + loginRequest.getEmail() + "] | Password: [" + loginRequest.getPassword() + "]");
         try {
             userLogic.login(loginRequest.getEmail(), loginRequest.getPassword());
 
