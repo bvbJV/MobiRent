@@ -78,6 +78,8 @@ class LoginViewModel(
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
 
+            android.util.Log.d("DEBUG_LOGIN", "MÓVIL ENVÍA -> Email: [${state.email}] | Password: [${state.password}]")
+
             val result = authRepository.login(state.email, state.password)
 
             result.fold(

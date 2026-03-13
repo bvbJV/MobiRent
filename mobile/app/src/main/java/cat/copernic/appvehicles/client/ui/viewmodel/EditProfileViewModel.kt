@@ -35,7 +35,7 @@ data class EditProfileUiState(
 class EditProfileViewModel(app: Application) : AndroidViewModel(app) {
 
     private val sessionStore = SessionManager(app.applicationContext)
-    private val api: ClientApiService = RetrofitProvider.retrofit.create(ClientApiService::class.java)
+    private val api: ClientApiService = RetrofitProvider.retrofitApi.create(ClientApiService::class.java)
     private val repo = ClientRepository(api)
 
     private val _uiState = MutableStateFlow(EditProfileUiState())
