@@ -1,4 +1,4 @@
-= [MOBIRENT]
+= MOBIRENT
 :toc:
 :toc-title: Índex
 :sectnums:
@@ -9,7 +9,7 @@ Projecte ABP - Projecte 3 - Aplicació mobile amb API REST
 
 == Descripció del projecte
 
-MobiRent és una aplicació mòbil Android desenvolupada amb Kotlin i Jetpack Compose que permet consultar vehicles, veure’n el detall, consultar la disponibilitat per rang de dates i gestionar reserves mitjançant una arquitectura client-servidor basada en una API REST implementada amb Spring Boot.
+Mobirent és una aplicació mòbil Android desenvolupada amb Kotlin i Jetpack Compose que permet consultar vehicles, veure’n el detall, consultar la disponibilitat per rang de dates i gestionar reserves mitjançant una arquitectura client-servidor basada en una API REST implementada amb Spring Boot.
 
 L’aplicació diferencia entre funcionalitats per a usuari anònim i funcionalitats per a client autenticat. Els usuaris registrats poden iniciar sessió, editar el seu perfil, crear reserves, consultar-les, ordenar-les i anul·lar-les abans de la seva data d’inici.
 
@@ -27,7 +27,7 @@ L’objectiu del projecte és implementar una solució completa formada per:
 
 Vídeo promocional / demo:
 
-* link:https://drive.google.com/file/d/1wi4RcSJEHeLXuTi5LG0krJqMkQiLLNYb/view?usp=sharing[],window=_blank][Veure vídeo del projecte]
+* link:[https://drive.google.com/file/d/1wi4RcSJEHeLXuTi5LG0krJqMkQiLLNYb/view?usp=sharing][Veure vídeo del projecte]
 
 
 == Membres del grup
@@ -39,10 +39,10 @@ Vídeo promocional / demo:
 
 == Portafolis personals
 
-* link:[AQUÍ_ENLLAÇ_PORTAFOLI_1,window=_blank][Portafoli Bachir El Harrak]
-* link:[AQUÍ_ENLLAÇ_PORTAFOLI_2,window=_blank][Portafoli Javier Sánchez Osuna]
-* link:[AQUÍ_ENLLAÇ_PORTAFOLI_3,window=_blank][Portafoli Hamza Rourou Rourou]
-* link:[AQUÍ_ENLLAÇ_PORTAFOLI_4,window=_blank][Portafoli Joel Reyes Niebla]
+* link:[https://github.com/bvbJV/][Portafoli Bachir El Harrak]
+* link:[https://github.com/javiprogramm28][Portafoli Javier Sánchez Osuna]
+* link:[https://github.com/Hrourou][Portafoli Hamza Rourou Rourou]
+* link:[https://github.com/jreyes2-dev][Portafoli Joel Reyes Niebla]
 
 == Estructura del repositori
 
@@ -432,34 +432,13 @@ Algunes línies de millora plantejades per al projecte són:
 
 Projecte acadèmic desenvolupat dins l’ABP - Projecte 3 del curs [2024-2025 / 2025-2026], centrat en el desenvolupament d’una app Android amb backend REST.
 
-== Captures de pantalla
-
-=== Pantalla inicial
-
-image::documentacio/img/home.png[Home, width=300]
-
-=== Llistat de vehicles
-
-image::documentacio/img/vehicles.png[Vehicles, width=300]
-
-=== Detall de vehicle
-
-image::documentacio/img/vehicle-detail.png[Detall vehicle, width=300]
-
-=== Llistat de reserves
-
-image::documentacio/img/reserves.png[Reserves, width=300]
-
-=== Detall de reserva
-
-image::documentacio/img/reserva-detail.png[Detall reserva, width=300]
-
 == Enllaços
 
-* Repositori GitLab: link:[AQUÍ_ENLLAÇ_GITLAB,window=_blank][Repositori del projecte]
-* Vídeo: link:[AQUÍ_ENLLAÇ_VIDEO,window=_blank][Vídeo promocional / demo]
+* Repositori GitLab: link:[https://gitlab.com/belharrak/projecte3_grup4][Repositori del projecte]
+* Vídeo: link:[https://drive.google.com/file/d/1wi4RcSJEHeLXuTi5LG0krJqMkQiLLNYb/view?usp=sharing][Vídeo promocional / demo]
 * Portafolis: veure apartat corresponent d’aquest document
 
 == Autoría
 
 Projecte desenvolupat per l’equip [NOM DEL GRUP] dins del mòdul corresponent del CFGS DAM.
+
